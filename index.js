@@ -7,3 +7,8 @@ const app = new express();
 app.get('/', function (req, res) {
     res.send("I'm working correctly :)");
 });
+
+// TODO: The port must be in a config file
+app.listen(8080, () => {
+   console.log('Listening on port 8080');
+});
