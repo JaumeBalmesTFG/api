@@ -18,5 +18,5 @@ ADD . .
 EXPOSE 8080
 
 # Run aplication
-CMD ["node", "index.js"]
+CMD ["npm", "start"]
 
