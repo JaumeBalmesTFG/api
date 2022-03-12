@@ -7,9 +7,11 @@ const app = express();
 const morgan = require('morgan');
 
 // Config
+const {PORT, URI} = require('./config/config');
 const {HttpStatusCode, HttpStatusMessage} = require('./config/status-codes');
 
 // Middlewares
+app.use(express.json());
 app.use(morgan('dev'));
 
 // Testing endpoint
@@ -17,7 +19,8 @@ app.get('/', function (req, res) {
     res.status(HttpStatusCode.OK).send(HttpStatusMessage.OK);
 });
 
-// TODO: The port must be in a config file
-app.listen(8080, () => {
-   console.log('Listening on port 8080');
-});
+// Database Connection
+require('./connection').initDatabase(PORT, URI, app);
+
+
+
