@@ -14,7 +14,7 @@ const {HttpStatusCode, HttpStatusMessage} = require('./config/status-codes');
  * Custom Routers
  */
 
-const authRouter = require("./routes/auth/auth"); //Pending
+//const authRouter = require("./routes/auth/auth"); //Pending
 const moduleRouter = require("./routes/module/module");
 const ruleRouter = require("./routes/rule/rule");
 const taskRouter = require("./routes/task/task");
@@ -37,19 +37,20 @@ app.use("/uf", ufRouter);
 /**
  * Auth routes (Pending to move to a single file)
  */
-app.post("/auth", req, res => {
+app.post("/auth", function(req, res) {
     //Check if req email is in db
     //Return json with "action": "login|register" format
 });
 
-app.post("/register", req, res => {
+app.post("/register", function(req, res) {
+    res.status(HttpStatusCode.OK).send(HttpStatusMessage.OK);
     //Check that all the data is valid (no empty data in comparation with the model and email is well formatted).
     //Check that user does not exist
     //Store user
     //Return message and code
 });
 
-app.post("/login", req, res => {
+app.post("/login", function(req, res) {
     //Check that email and password are correct
     //Return token & code
 });
