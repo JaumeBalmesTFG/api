@@ -10,6 +10,9 @@ const morgan = require('morgan');
 const {PORT, URI} = require('./config/config');
 const {HttpStatusCode, HttpStatusMessage} = require('./config/status-codes');
 
+// Controllers
+const auth = require('./controllers/auth/authController');
+
 /**
  * Custom Routers
  */
@@ -21,13 +24,16 @@ const taskRouter = require("./routes/task/task");
 const truancyRouter = require("./routes/truancy/truancy");
 const ufRouter = require("./routes/uf/uf");
 
+
 // Middlewares
+const {validateUserSchema} = require('./middlewares/validators/userValidator');
 app.use(express.json());
 app.use(morgan('dev'));
 
 /**
  * Routes
  */
+
 app.use("/module", moduleRouter);
 app.use("/rule", ruleRouter);
 app.use("/task", taskRouter);
@@ -42,13 +48,7 @@ app.post("/auth", function(req, res) {
     //Return json with "action": "login|register" format
 });
 
-app.post("/register", function(req, res) {
-    res.status(HttpStatusCode.OK).send(HttpStatusMessage.OK);
-    //Check that all the data is valid (no empty data in comparation with the model and email is well formatted).
-    //Check that user does not exist
-    //Store user
-    //Return message and code
-});
+app.post("/register", validateUserSchema, auth.registerController);
 
 app.post("/login", function(req, res) {
     //Check that email and password are correct
@@ -64,4 +64,4 @@ app.get('/', function (req, res) {
 require('./connection').initDatabase(PORT, URI, app);
 
 
-
+module.exports = app;
