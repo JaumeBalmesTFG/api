@@ -12,6 +12,7 @@ const HttpStatusCode = {
   METHOD_NOT_ALLOWED    : 405,
   NOT_ACCEPTABLE        : 406,
   REQUEST_TIMEOUT       : 408,
+  CONFLICT              : 409,
   TOO_MANY_REQUESTS     : 429,
   INTERNAL_SERVER_ERROR : 500
 };
@@ -25,6 +26,7 @@ const HttpStatusMessage = {
   UNAUTHORIZED          : "UNAUTHORIZED",
   FORBIDDEN             : "FORBIDDEN",
   NOT_FOUND             : "NOT_FOUND",
+  CONFLICT              : "CONFLICT",
   METHOD_NOT_ALLOWED    : "METHOD_NOT_ALLOWED",
   NOT_ACCEPTABLE        : "NOT_ACCEPTABLE",
   REQUEST_TIMEOUT       : "REQUEST_TIMEOUT",
@@ -32,7 +34,16 @@ const HttpStatusMessage = {
   INTERNAL_SERVER_ERROR : "INTERNAL_SERVER_ERROR"
 };
 
+const ResponseMessage = {
+  EMAIL_EXISTS: "EMAIL_EXISTS",
+  DATABASE_ERROR: "DATABASE_ERROR",
+  PASSWORD_ENCRYPTION_ERROR: "PASSWORD_ENCRYPTION_ERROR",
+  USER_CREATED: "USER_CREATED",
+  TOKEN_GENERATION_ERROR: "TOKEN_GENERATION_ERROR"
+}
+
 module.exports = {
   HttpStatusCode,
-  HttpStatusMessage
+  HttpStatusMessage,
+  ResponseMessage
 };
