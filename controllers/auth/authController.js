@@ -100,16 +100,6 @@ exports.loginController = async function (req, res) {
     // Request Body
     let body = req.body;
 
-    if (body.password.length === 0 || body.email.length === 0) {
-        return res.status(HttpStatusCode.CONFLICT).send({
-            error: HttpStatusMessage.CONFLICT,
-            message: ResponseMessage.EMPTY_EMAIL_PASSWORD,
-            path: req.path,
-            method: req.method,
-            body: body
-        });
-    }
-
     // Verify user exists
     const user = await User.findOne({ email: body.email });
 

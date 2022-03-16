@@ -8,7 +8,7 @@ const {
     HttpStatusMessage,
 } = require('../../../config/status-codes');
 
-const userSchema = Joi.object({
+const userLoginSchema = Joi.object({
 
     email: Joi.string()
         .email()
@@ -26,7 +26,7 @@ const userSchema = Joi.object({
 });
 
 exports.validateUserLoginSchema = async function (req, res, next) {
-    await userSchema.validateAsync(req.body)
+    await userLoginSchema.validateAsync(req.body)
         .then(function () { return next(); })
         .catch(function (err) {
             return res.status(HttpStatusCode.NOT_ACCEPTABLE).send({
