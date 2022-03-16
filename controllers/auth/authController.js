@@ -92,3 +92,62 @@ exports.registerController = async function (req, res) {
         }); 
     });
 };
+
+
+
+exports.loginController = async function (req, res) {
+
+    // Request Body
+    let body = req.body;
+
+    if (body.password.length === 0 || body.email.length === 0) {
+        return res.status(HttpStatusCode.CONFLICT).send({
+            error: HttpStatusMessage.CONFLICT,
+            message: ResponseMessage.EMPTY_EMAIL_PASSWORD,
+            path: req.path,
+            method: req.method,
+            body: body
+        });
+    }
+
+    // Verify user exists
+    const user = await User.findOne({ email: body.email });
+
+    //In case we do not have user we return a [409 CONFLICT] status code
+    if (!user) {
+        return res.status(HttpStatusCode.CONFLICT).send({
+            error: HttpStatusMessage.CONFLICT,
+            message: ResponseMessage.EMAIL_NOT_EXISTS,
+            path: req.path,
+            method: req.method,
+            body: body
+        });
+    }
+
+    await bcrypt.compare(body.password, user.password, function(err, response){
+        if (err){
+            return res.status(HttpStatusCode.CONFLICT).send({
+                error: HttpStatusMessage.CONFLICT,
+                message: ResponseMessage.WRONG_PASSWORD,
+                path: req.path,
+                method: req.method,
+                body: body
+            });
+        }
+        if (response) {
+            return res.status(HttpStatusCode.ACCEPTED).send({
+                message: ResponseMessage.LOGIN_SUCCESSFUL,
+                body: {
+                    token: user.token
+                }
+            });
+        }
+        return res.status(HttpStatusCode.CONFLICT).send({
+            error: HttpStatusMessage.INTERNAL_SERVER_ERROR,
+            message: HttpStatusMessage.INTERNAL_SERVER_ERROR,
+            path: req.path,
+            method: req.method,
+            body: body
+        });
+    });
+};
