@@ -26,7 +26,8 @@ const ufRouter = require("./routes/uf/uf");
 
 
 // Middlewares
-const {validateUserSchema} = require('./middlewares/validators/userValidator');
+const {validateUserSchema} = require('./middlewares/validators/user/userValidator');
+const {validateUserLoginSchema} = require("./middlewares/validators/user/userLoginValidator");
 app.use(express.json());
 app.use(morgan('dev'));
 
@@ -41,7 +42,7 @@ app.use("/truancy", truancyRouter);
 app.use("/uf", ufRouter);
 
 /**
- * Auth routes (Pending to move to a single file)
+ * auth routes (Pending to move to a single file)
  */
 app.post("/auth", function(req, res) {
     //Check if req email is in db
@@ -50,10 +51,7 @@ app.post("/auth", function(req, res) {
 
 app.post("/register", validateUserSchema, auth.registerController);
 
-app.post("/login", function(req, res) {
-    //Check that email and password are correct
-    //Return token & code
-});
+app.post("/login", validateUserLoginSchema, auth.loginController);
 
 // Testing endpoint
 app.get('/', function (req, res) {

@@ -6,7 +6,7 @@ const Joi = require('joi');
 const {
     HttpStatusCode,
     HttpStatusMessage,
-} = require('../../config/status-codes');
+} = require('../../../config/status-codes');
 
 const userSchema = Joi.object({
     // .pattern(/^[a-z]+$/) ONLY LETTERS
