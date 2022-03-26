@@ -14,6 +14,7 @@ const {
     HttpStatusMessage,
     ResponseMessage
 } = require('../../config/status-codes');
+
 const User = require('../../models/auth/User');
 
 // Register Controller
@@ -92,8 +93,6 @@ exports.registerController = async function (req, res) {
         }); 
     });
 };
-
-
 
 exports.loginController = async function (req, res) {
 
