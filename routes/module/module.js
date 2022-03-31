@@ -1,30 +1,22 @@
 const express = require("express");
 const router = express.Router();
 
+
+// Controllers
+const {
+    create,
+    update,
+    get,
+    archive
+} = require('../../controllers/module/moduleController');
+
 /**
  * CRUD
  */
-router.post("/create", function(req, res) {
-    //Check data is valid (name is not empty, color is not empty and is not white)
-    //Set archived to false (IMPORTANT!! is it mandatory for frontend to send us an object with archive false or
-    //do we do it by our self??)
-    //Return message and code
-});
-
-router.get("/:module_id", function(req, res) {
-    //Check that the module_id exists
-    //Return all the data of the module_id
-    //Return message and code
-});
-
-router.put("/:module_id/edit", function(req, res) {
-    //Check that module_id exists and data is valid.
-    //Return message and code
-});
-
-router.post("/:module_id/archive", function(req, res) {
-    //Check that module_id exists, return !archive
-});
+router.post("/", create);
+router.put("/:module_id", update);
+router.get("/:module_id", get);
+router.post("/:module_id/archive", archive);
 
 /**
  * Data retrievers
