@@ -31,7 +31,7 @@ exports.isAuthenticatedPrivate = async function(req, res, next){
             throw err;
         }
 
-        req.id = decoded._id;
+        req.authUserId = decoded._id;
         req.email = decoded.email;
 
     } catch (error) {
