@@ -1,6 +1,13 @@
 // Module Model
 const Module = require('../../models/module/Module');
 
+// Status Messages
+const {
+    HttpStatusCode,
+    HttpStatusMessage,
+    ResponseMessage
+} = require('../../config/status-codes');
+
 exports.create = async function (req, res, next) {
 
     const { name, color } = req.body;

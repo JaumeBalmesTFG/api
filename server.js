@@ -19,6 +19,7 @@ const ruleRouter = require("./routes/rule/rule");
 const taskRouter = require("./routes/task/task");
 const truancyRouter = require("./routes/truancy/truancy");
 const ufRouter = require("./routes/uf/uf");
+const testRouter = require('./routes/test');
 
 // Middlewares
 app.use(express.json());
@@ -35,6 +36,7 @@ app.use("/rule", ruleRouter);
 app.use("/task", taskRouter);
 app.use("/truancy", truancyRouter);
 app.use("/uf", ufRouter);
+app.use("/test", testRouter);
 app.use("/", authRouter);
 
 // Database Connection
