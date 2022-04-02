@@ -1,5 +1,3 @@
-// Module Controller
-
 // Module Model
 const Module = require('../../models/module/Module');
 
@@ -30,7 +28,6 @@ exports.get = async function (req, res, next) {
         return res.send(doc);
     });
 }
-
 
 exports.update = async function (req, res, next) {
     await Module.findOneAndUpdate(
