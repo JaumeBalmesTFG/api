@@ -20,7 +20,7 @@ exports.create = async function (req, res, next) {
 
     if(match){
         return res.status(HttpStatusCode.CONFLICT).send({
-            error: ResponseMessage.ALREADY_EXISTS,
+            message: ResponseMessage.ALREADY_EXISTS,
             path: req.originalUrl,
             method: req.method,
             body: req.body
@@ -44,7 +44,7 @@ exports.create = async function (req, res, next) {
         }
 
         return res.status(HttpStatusCode.CREATED).send({
-            message: 'MODULE ' + ResponseMessage.CREATED,
+            message: 'MODULE_' + ResponseMessage.CREATED,
             path: req.originalUrl,
             method: req.method,
             body: doc,

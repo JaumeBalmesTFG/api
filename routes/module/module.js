@@ -11,6 +11,7 @@ const {
 
 // Middlewares
 const { isAuthenticatedPrivate } = require('../../middlewares/auth/authentication');
+const { validateModuleSchema } = require('../../middlewares/module/cu_module');
 
 // Auth
 router.use(isAuthenticatedPrivate);
@@ -18,7 +19,7 @@ router.use(isAuthenticatedPrivate);
 /**
  * CRUD
  */
-router.post("/", create);
+router.post("/", validateModuleSchema, create);
 router.put("/:module_id", update);
 router.get("/:module_id", get);
 router.post("/:module_id/archive", archive);

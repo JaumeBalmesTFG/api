@@ -18,7 +18,7 @@ const moduleSchema = new Schema({
 
     color: {
         type: String,
-        maxlength: 6,
+        maxlength: 7,
         required: true,
     },
 
