@@ -9,6 +9,12 @@ const {
     archive
 } = require('../../controllers/module/moduleController');
 
+// Middlewares
+const { isAuthenticatedPrivate } = require('../../middlewares/auth/authentication');
+
+// Auth
+router.use(isAuthenticatedPrivate);
+
 /**
  * CRUD
  */

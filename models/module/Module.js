@@ -4,10 +4,10 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const moduleSchema = new Schema({
-    // authorId: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     required: true
-    // },
+    authorId: {
+        type: Schema.Types.ObjectId,
+        required: true
+    },
 
     name: {
         type: String,
