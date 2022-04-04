@@ -7,13 +7,12 @@ const app = express();
 const morgan = require('morgan');
 
 // Config
-const {PORT, URI} = require('./config/config');
-const {HttpStatusCode, HttpStatusMessage} = require('./config/status-codes');
+const { PORT, URI } = require('./config/config');
+const { HttpStatusCode, HttpStatusMessage } = require('./config/status-codes');
 
 /**
  * Custom Routers
  */
-
 const authRouter = require("./routes/auth/auth"); //Pending
 const moduleRouter = require("./routes/module/module");
 const ruleRouter = require("./routes/rule/rule");
