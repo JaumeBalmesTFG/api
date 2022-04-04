@@ -10,11 +10,11 @@ chai.use(chaiHttp);
 
 describe("Create Module", function () {
 
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAdXNlcjMuY29tIiwiX2lkIjoiNjI0OGI0YzBiYjYzNzUzMmRmMzViMDJkIiwiaWF0IjoxNjQ4OTMyMDMyfQ.aIfWVauUVaUDwPMr0murf650gal1ZANivWv32CsWp-w";
+
     it("[1-Create Module] | Should return a 201 or 409", function (done) {
 
-        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAdXNlcjMuY29tIiwiX2lkIjoiNjI0OGI0YzBiYjYzNzUzMmRmMzViMDJkIiwiaWF0IjoxNjQ4OTMyMDMyfQ.aIfWVauUVaUDwPMr0murf650gal1ZANivWv32CsWp-w";
-
-        const module = {
+        let module = {
             name: "Java 123",
             color: "#00000F"
         }
@@ -33,9 +33,7 @@ describe("Create Module", function () {
 
     it("[2- Invalid Schema] | Should return 406", function (done) {
 
-        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAdXNlcjMuY29tIiwiX2lkIjoiNjI0OGI0YzBiYjYzNzUzMmRmMzViMDJkIiwiaWF0IjoxNjQ4OTMyMDMyfQ.aIfWVauUVaUDwPMr0murf650gal1ZANivWv32CsWp-w";
-
-        const module = {
+        let module = {
             name: "Java 1"
         };
 
@@ -53,9 +51,7 @@ describe("Create Module", function () {
     
     it("[3- Invalid Patterns] | Should return 406", function (done) {
 
-        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAdXNlcjMuY29tIiwiX2lkIjoiNjI0OGI0YzBiYjYzNzUzMmRmMzViMDJkIiwiaWF0IjoxNjQ4OTMyMDMyfQ.aIfWVauUVaUDwPMr0murf650gal1ZANivWv32CsWp-w";
-
-        const module = {
+        let module = {
             name: "Java 1¿",
             color: "#00000F"
         };
@@ -74,9 +70,7 @@ describe("Create Module", function () {
 
     it("[4- Invalid Patterns] | Should return 406", function (done) {
 
-        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAdXNlcjMuY29tIiwiX2lkIjoiNjI0OGI0YzBiYjYzNzUzMmRmMzViMDJkIiwiaWF0IjoxNjQ4OTMyMDMyfQ.aIfWVauUVaUDwPMr0murf650gal1ZANivWv32CsWp-w";
-
-        const module = {
+        let module = {
             name: "Java 1",
             color: "#00000F¿"
         };
@@ -95,7 +89,27 @@ describe("Create Module", function () {
 });
 
 describe("Update Module", function () {
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAdXNlcjMuY29tIiwiX2lkIjoiNjI0OGI0YzBiYjYzNzUzMmRmMzViMDJkIiwiaWF0IjoxNjQ4OTMyMDMyfQ.aIfWVauUVaUDwPMr0murf650gal1ZANivWv32CsWp-w";
+    const module_id = "624a0d1f466951bccc09260f";
 
+    it("[1-Update Module] | Should return a 200, 404, 409, 500", function (done) {
+
+        let module = {
+            name: "Java Course 1",
+            color: "#00000F"
+        }
+
+        chai.request(server)
+            .put(`/module/${module_id}`)
+            .set({ "Authorization": `Bearer ${token}` })
+            .send(module)
+            .end(function (err, response) {
+                console.log(response.body);
+                response.status.should.to.be.oneOf([200, 404, 409, 500]);
+                response.body.message.should.to.be.oneOf(["OK", "NOT_FOUND", "ALREADY_EXISTS", "DATABASE_ERROR", ]);
+                done();
+            });
+    });
 });
 
 

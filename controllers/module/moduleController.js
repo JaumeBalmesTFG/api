@@ -68,9 +68,20 @@ exports.update = async function (req, res, next) {
 
     const { name, color } = req.body;
 
-    const match = await Module.findOne({ _id: req.params.module_id, authorId: req.authUserId });
+    const match = await Module.findOne({ _id: req.params.module_id, authorId: req.authUserId, name: name });
 
-    if(!match){
+    if(match){
+        return res.status(HttpStatusCode.CONFLICT).send({
+            message: ResponseMessage.ALREADY_EXISTS,
+            path: req.originalUrl,
+            method: req.method,
+            body: req.body
+        });
+    }
+
+    const doc = await Module.findOne({ _id: req.params.module_id, authorId: req.authUserId });
+
+    if(!doc){
         return res.status(HttpStatusCode.NOT_FOUND).send({
             message: HttpStatusMessage.NOT_FOUND,
             path: req.originalUrl,
@@ -79,10 +90,10 @@ exports.update = async function (req, res, next) {
         });
     }
 
-    match.name = name;
-    match.color = color;
+    doc.name = name;
+    doc.color = color;
 
-    await match.save(function (err, doc){
+    await doc.save(function (err, obj){
         if (err) {
             return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
                 error: ResponseMessage.DATABASE_ERROR,
@@ -96,7 +107,7 @@ exports.update = async function (req, res, next) {
             message: HttpStatusMessage.OK,
             path: req.originalUrl,
             method: req.method,
-            body: doc,
+            body: obj,
         });
     });
 }
