@@ -9,7 +9,7 @@ const {
     ResponseMessage
 } = require('../../config/status-codes');
 
-const moduleSchema = Joi.object({
+let moduleSchema = Joi.object({
     name: Joi.string()
         .pattern(/^[A-z0-9\s]+$/)
         .min(1)

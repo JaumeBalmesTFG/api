@@ -20,7 +20,7 @@ router.use(isAuthenticatedPrivate);
  * CRUD
  */
 router.post("/", validateModuleSchema, create);
-router.put("/:module_id", update);
+router.put("/:module_id", validateModuleSchema, update);
 router.get("/:module_id", get);
 router.post("/:module_id/archive", archive);
 

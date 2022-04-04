@@ -18,7 +18,7 @@ exports.create = async function (req, res, next) {
         name: name
     });
 
-    if(match){
+    if (match) {
         return res.status(HttpStatusCode.CONFLICT).send({
             message: ResponseMessage.ALREADY_EXISTS,
             path: req.originalUrl,
@@ -26,7 +26,7 @@ exports.create = async function (req, res, next) {
             body: req.body
         });
     }
-    
+
     const newModule = new Module({
         authorId: req.authUserId,
         name: name,
@@ -34,13 +34,13 @@ exports.create = async function (req, res, next) {
     });
 
     await newModule.save(function (err, doc) {
-        if (err) { 
+        if (err) {
             return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
                 error: ResponseMessage.DATABASE_ERROR,
                 path: req.originalUrl,
                 method: req.method,
                 body: req.body
-            }); 
+            });
         }
 
         return res.status(HttpStatusCode.CREATED).send({
@@ -48,7 +48,7 @@ exports.create = async function (req, res, next) {
             path: req.originalUrl,
             method: req.method,
             body: doc,
-        }); 
+        });
     });
 }
 
@@ -65,19 +65,40 @@ exports.get = async function (req, res, next) {
 
 // Update Module
 exports.update = async function (req, res, next) {
-    await Module.findOneAndUpdate(
-        { _id: req.params.module_id },
-        { $set: req.body },
-        { new: true },
 
-        function (err, doc) {
-            if (err) {
-                return res.send("error on updating");
-            }
+    const { name, color } = req.body;
 
-            return res.send(doc);
+    const match = await Module.findOne({ _id: req.params.module_id, authorId: req.authUserId });
+
+    if(!match){
+        return res.status(HttpStatusCode.NOT_FOUND).send({
+            message: HttpStatusMessage.NOT_FOUND,
+            path: req.originalUrl,
+            method: req.method,
+            body: req.body
+        });
+    }
+
+    match.name = name;
+    match.color = color;
+
+    await match.save(function (err, doc){
+        if (err) {
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
+                error: ResponseMessage.DATABASE_ERROR,
+                path: req.originalUrl,
+                method: req.method,
+                body: req.body
+            });
         }
-    )
+
+        return res.status(HttpStatusCode.OK).send({
+            message: HttpStatusMessage.OK,
+            path: req.originalUrl,
+            method: req.method,
+            body: doc,
+        });
+    });
 }
 
 // Archive Module
