@@ -112,5 +112,34 @@ describe("Update Module", function () {
     });
 });
 
+describe("Get Module", function () {
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAdXNlcjMuY29tIiwiX2lkIjoiNjI0OGI0YzBiYjYzNzUzMmRmMzViMDJkIiwiaWF0IjoxNjQ4OTMyMDMyfQ.aIfWVauUVaUDwPMr0murf650gal1ZANivWv32CsWp-w";
+    const module_id = "624a0d1f466951bccc09260f";
+
+    it("[1-Get Module] | Should return a 200", function (done) {
+        chai.request(server)
+            .get(`/module/${module_id}`)
+            .set({ "Authorization": `Bearer ${token}` })
+            .end(function (err, response) {
+                console.log(response.body);
+                response.status.should.to.be.equal(200);
+                response.body.message.should.to.be.equal("OK");
+                done();
+            });
+    });
+
+    it("[2-Get Module] | Should return a 500", function (done) {
+        chai.request(server)
+            .get(`/module/${module_id}0`)
+            .set({ "Authorization": `Bearer ${token}` })
+            .end(function (err, response) {
+                console.log(response.body);
+                response.status.should.to.be.equal(500);
+                response.body.message.should.to.be.equal("DATABASE_ERROR");
+                done();
+            });
+    });
+});
+
 
 
