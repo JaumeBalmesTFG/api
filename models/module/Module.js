@@ -13,7 +13,6 @@ const moduleSchema = new Schema({
         type: String,
         //maxlength: 30,
         required: true,
-        unique: true
     },
 
     color: {

@@ -8,6 +8,11 @@ const {
     ResponseMessage
 } = require('../../config/status-codes');
 
+// Checker
+const {
+    checkPathObjectId
+} = require('../../services/checker');
+
 // Create Module
 exports.create = async function (req, res, next) {
 
@@ -54,6 +59,16 @@ exports.create = async function (req, res, next) {
 
 // Get All Modules
 exports.get = async function (req, res, next) {
+
+    if(!checkPathObjectId(req.params.module_id)){
+        return res.status(HttpStatusCode.BAD_REQUEST).send({
+            message: HttpStatusMessage.BAD_REQUEST,
+            path: req.originalUrl,
+            method: req.method,
+            body: req.body
+        });
+    }
+
     await Module.findOne({ _id: req.params.module_id }, function (err, doc) {
         if (err) {
             return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
@@ -63,7 +78,7 @@ exports.get = async function (req, res, next) {
                 body: doc,
             });
         }
-        
+
         return res.status(HttpStatusCode.OK).send({
             message: HttpStatusMessage.OK,
             path: req.originalUrl,
@@ -75,6 +90,15 @@ exports.get = async function (req, res, next) {
 
 // Update Module
 exports.update = async function (req, res, next) {
+
+    if(!checkPathObjectId(req.params.module_id)){
+        return res.status(HttpStatusCode.BAD_REQUEST).send({
+            message: HttpStatusMessage.BAD_REQUEST,
+            path: req.originalUrl,
+            method: req.method,
+            body: req.body
+        });
+    }
 
     const { name, color } = req.body;
 
@@ -124,17 +148,44 @@ exports.update = async function (req, res, next) {
 
 // Archive Module
 exports.archive = async function (req, res, next) {
-    await Module.findOneAndUpdate(
-        { _id: req.params.module_id },
-        { $set: req.body },
-        { new: true },
 
-        function (err, doc) {
-            if (err) {
-                return res.send("error on updating");
-            }
+    if(!checkPathObjectId(req.params.module_id)){
+        return res.status(HttpStatusCode.BAD_REQUEST).send({
+            message: HttpStatusMessage.BAD_REQUEST,
+            path: req.originalUrl,
+            method: req.method,
+            body: req.body
+        });
+    }
 
-            return res.send(doc);
+    const match = await Module.findOne({  _id: req.params.module_id, authorId: req.authUserId });
+
+    if(!match){
+        return res.status(HttpStatusCode.NOT_FOUND).send({
+            message: HttpStatusMessage.NOT_FOUND,
+            path: req.originalUrl,
+            method: req.method,
+            body: req.body
+        });
+    }
+
+    match.archived = req.body.archived;
+
+    await match.save(function(err, doc){
+        if (err) {
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
+                error: ResponseMessage.DATABASE_ERROR,
+                path: req.originalUrl,
+                method: req.method,
+                body: req.body
+            });
         }
-    )
+
+        return res.status(HttpStatusCode.OK).send({
+            message: HttpStatusMessage.OK,
+            path: req.originalUrl,
+            method: req.method,
+            body: doc,
+        });
+    })
 }
