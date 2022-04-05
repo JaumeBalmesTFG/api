@@ -11,15 +11,12 @@ const { isAuthenticatedPublic } = require('../../middlewares/auth/authentication
 
 /** Auth Routes **/
 
-// Check if user is not authenticated
-router.use(isAuthenticatedPublic);
-
 router.post("/auth", function (req, res) {
     //Check if req email is in db
     //Return json with "action": "login|register" format
 });
 
-router.post("/register", validateUserSchema, auth.registerController);
-router.post("/login", validateUserLoginSchema, auth.loginController);
+router.post("/register",isAuthenticatedPublic, validateUserSchema, auth.registerController);
+router.post("/login", isAuthenticatedPublic, validateUserLoginSchema, auth.loginController);
 
 module.exports = router;

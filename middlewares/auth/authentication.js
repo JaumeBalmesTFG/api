@@ -10,12 +10,10 @@ exports.isAuthenticatedPublic = async function(req, res, next){
         const token = authorization.replace('Bearer', '').trim();
 
         if(await checkToken(token)){
-            throw err;
+            return res.send("redirect to calendar, user authorized");
         }
 
-    } catch (error) {
-        return res.send("redirect to calendar, user authorized");
-    }
+    } catch (error) { return; }
 
     next();
 };
@@ -28,15 +26,13 @@ exports.isAuthenticatedPrivate = async function(req, res, next){
         const decoded = await checkToken(token);
 
         if(!decoded){
-            throw err;
+            return res.send("return to login page, user not authorized");
         }
 
         req.authUserId = decoded._id;
         req.email = decoded.email;
 
-    } catch (error) {
-        return res.send("return to login page, user not authorized");
-    }
+    } catch (error) { return; }
 
     next();
 };

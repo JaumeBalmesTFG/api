@@ -1,11 +1,20 @@
 const express = require("express");
 const router = express.Router();
 
-router.post("/create", function(req, res) {
-    //Check data is valid (Compare with the model)
-    //Return message and code
-});
+// Controller
+const {
+    create
+} = require('../../controllers/task/taskController');
 
+// Middleware
+const {
+    isAuthenticatedPrivate
+} = require('../../middlewares/auth/authentication');
+
+router.use(isAuthenticatedPrivate);
+
+// Routes
+router.post("/", create);
 router.get("/:task_id", function(req, res) {
     //Return all the data of the task_id after checking it exists
     //Return message and code
