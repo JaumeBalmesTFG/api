@@ -21,6 +21,7 @@ exports.isAuthenticatedPublic = async function(req, res, next){
 exports.isAuthenticatedPrivate = async function(req, res, next){
     try {
         var authorization = req.get('Authorization');
+
         const token = authorization.replace('Bearer', '').trim();
 
         const decoded = await checkToken(token);
@@ -28,7 +29,6 @@ exports.isAuthenticatedPrivate = async function(req, res, next){
         if(!decoded){
             throw err;
         }
-
         req.authUserId = decoded._id;
         req.email = decoded.email;
 
