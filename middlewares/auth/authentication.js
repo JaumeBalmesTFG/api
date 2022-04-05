@@ -10,14 +10,12 @@ exports.isAuthenticatedPublic = async function(req, res, next){
         const token = authorization.replace('Bearer', '').trim();
 
         if(await checkToken(token)){
-            throw err;
+            return res.send("redirect to calendar, user authorized");
         }
 
     } catch (error) {
-        return res.send("redirect to calendar, user authorized");
+        next();
     }
-
-    next();
 };
 
 exports.isAuthenticatedPrivate = async function(req, res, next){
