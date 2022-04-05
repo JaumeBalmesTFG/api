@@ -11,7 +11,7 @@ const {
 
 // Middlewares
 const { isAuthenticatedPrivate } = require('../../middlewares/auth/authentication');
-const { validateModuleSchema } = require('../../middlewares/module/cu_module');
+const { validateModuleSchema, validateModuleArchivedSchema } = require('../../middlewares/module/moduleValidator');
 
 // Auth
 router.use(isAuthenticatedPrivate);
@@ -20,24 +20,24 @@ router.use(isAuthenticatedPrivate);
  * CRUD
  */
 router.post("/", validateModuleSchema, create);
-router.put("/:module_id", validateModuleSchema, update);
+router.put("/:module_id", validateModuleSchema, update)
+router.put("/:module_id/archive", validateModuleArchivedSchema, archive);
 router.get("/:module_id", get);
-router.post("/:module_id/archive", archive);
 
 /**
  * Data retrievers
  */
-router.get("/all/archived", function(req, res) {
+router.get("/all/archived", function (req, res) {
     //Return all modules that are archived by the user
     //If there are no modules archived, return message and code
 });
 
-router.get("/all/ufs", function(req, res) {
+router.get("/all/ufs", function (req, res) {
     //Return all modules with their ufs inside
     //In case the user does not have any module and uf, return message and code
 });
 
-router.get("/all", function(req, res) {
+router.get("/all", function (req, res) {
     //THE BEAST
     //Return all modules with their ufs inside. Inside the ufs, return all the tasks and all the rules, also
     //Return the number of truancies of the uf (number of hours not just a SUM of registers) as an int called "numTruancies"

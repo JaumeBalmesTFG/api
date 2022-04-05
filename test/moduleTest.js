@@ -141,5 +141,65 @@ describe("Get Module", function () {
     });
 });
 
+describe("Update Module /Archive", function () {
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAdXNlcjMuY29tIiwiX2lkIjoiNjI0OGI0YzBiYjYzNzUzMmRmMzViMDJkIiwiaWF0IjoxNjQ4OTMyMDMyfQ.aIfWVauUVaUDwPMr0murf650gal1ZANivWv32CsWp-w";
+    const module_id = "624a0d1f466951bccc09260f";
+
+
+    it("[1-Archive Module] | Should return a 200", function (done) {
+
+        let module = {
+            archived: true
+        }
+
+        chai.request(server)
+            .put(`/module/${module_id}/archive`)
+            .set({ "Authorization": `Bearer ${token}` })
+            .send(module)
+            .end(function (err, response) {
+                console.log(response.body);
+                response.status.should.to.be.equal(200);
+                response.body.message.should.to.be.equal("OK");
+                done();
+            });
+    });
+
+    it("[2-Archive Module, Invalid Schema] | Should return a 406", function (done) {
+
+        let module = {
+            archivedd: true
+        }
+
+        chai.request(server)
+            .put(`/module/${module_id}/archive`)
+            .set({ "Authorization": `Bearer ${token}` })
+            .send(module)
+            .end(function (err, response) {
+                console.log(response.body);
+                response.status.should.to.be.equal(406);
+                response.body.message.should.to.be.equal("NOT_ACCEPTABLE");
+                done();
+            });
+    });
+
+    it("[3-Archive Module, No Valid ObjectId] | Should return a 404", function (done) {
+
+        let module = {
+            archived: true
+        }
+
+        chai.request(server)
+            .put(`/module/${module_id}0/archive`)
+            .set({ "Authorization": `Bearer ${token}` })
+            .send(module)
+            .end(function (err, response) {
+                console.log(response.body);
+                response.status.should.to.be.equal(400);
+                response.body.message.should.to.be.equal("BAD_REQUEST");
+                done();
+            });
+    });
+});
+
 
 
