@@ -15,12 +15,12 @@ exports.isAuthenticatedPublic = async function(req, res, next){
 
     } catch (error) { return; }
 
-    next();
 };
 
 exports.isAuthenticatedPrivate = async function(req, res, next){
     try {
         var authorization = req.get('Authorization');
+
         const token = authorization.replace('Bearer', '').trim();
 
         const decoded = await checkToken(token);
@@ -32,8 +32,8 @@ exports.isAuthenticatedPrivate = async function(req, res, next){
         req.authUserId = decoded._id;
         req.email = decoded.email;
 
-    } catch (error) { return; }
+        next();
 
-    next();
+    } catch (error) { return; }
 };
 
