@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon server",
     "start": "node server",
-    "test": "mocha"
+    "test": "mocha",
+    "prod": "node server mongodb://db:27017/project"
   },
   "author": "",
   "license": "ISC",

@@ -13,9 +13,9 @@ exports.isAuthenticatedPublic = async function(req, res, next){
             return res.send("redirect to calendar, user authorized");
         }
 
-    } catch (error) {
         next();
-    }
+
+    } catch (error) { return; }
 };
 
 exports.isAuthenticatedPrivate = async function(req, res, next){
@@ -27,15 +27,13 @@ exports.isAuthenticatedPrivate = async function(req, res, next){
         const decoded = await checkToken(token);
 
         if(!decoded){
-            throw err;
+            return res.send("return to login page, user not authorized");
         }
         req.authUserId = decoded._id;
         req.email = decoded.email;
 
-    } catch (error) {
-        return res.send("return to login page, user not authorized");
-    }
+        next();
 
-    next();
+    } catch (error) { return; }
 };
 
