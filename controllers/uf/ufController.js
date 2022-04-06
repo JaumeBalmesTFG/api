@@ -6,7 +6,6 @@ const {
     HttpStatusCode,
     ResponseMessage, HttpStatusMessage
 } = require('../../config/status-codes');
-const Module = require("../../models/module/Module");
 
 // Create Uf
 exports.create = async function (req, res, next) {

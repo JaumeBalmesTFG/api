@@ -11,6 +11,7 @@ const {
 // Middlewares
 const { isAuthenticatedPrivate } = require('../../middlewares/auth/authentication');
 const { validateUfSchema } = require('../../middlewares/uf/ufValidator');
+const { validateModuleExistsAndIsFromRequestUser } = require ('../../middlewares/checker/module/moduleChecker')
 
 // Auth
 router.use(isAuthenticatedPrivate);
@@ -18,8 +19,8 @@ router.use(isAuthenticatedPrivate);
 /**
  * CRUD
  */
-router.post("/create", validateUfSchema, create);
+router.post("/create", [validateUfSchema, validateModuleExistsAndIsFromRequestUser], create);
 router.get("/:uf_id", get);
-router.put("/:uf_id/edit", validateUfSchema, update);
+router.put("/:uf_id/edit", [validateUfSchema, validateModuleExistsAndIsFromRequestUser], update);
 
 module.exports = router;
