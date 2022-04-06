@@ -138,7 +138,7 @@ exports.update = async function (req, res, next) {
 }
 
 // Delete Truancy
-exports.delete = async function (req, res, next) {
+exports.remove = async function (req, res, next) {
 
     if(!checkPathObjectId(req.params.truancy_id)){
         return res.status(HttpStatusCode.BAD_REQUEST).send({

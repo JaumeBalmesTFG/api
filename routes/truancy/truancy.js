@@ -3,7 +3,7 @@ const router = express.Router();
 
 // Controllers
 const {
-    delete,
+    remove,
     create,
     update,
     get,
@@ -20,9 +20,9 @@ router.use(isAuthenticatedPrivate);
  * CRUD
  */
 router.post("/create", validateTruancySchema, create);
-router.put("/:truancy_id", validateTruancySchema, update)
+router.put("/:truancy_id", validateTruancySchema, update);
 router.get("/:truancy_id", get);
-router.delete("/:truancy_id/delete",
+router.delete("/:truancy_id/delete", remove);
 
 
 
