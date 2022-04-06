@@ -5,7 +5,7 @@ module.exports = {
   PORT: process.env.PORT || 8080,
 
   // Databse connection uri
-  URI: process.env.URI || "mongodb://127.0.0.1:27017/testAPI",
+  URI: process.env.URI || "mongodb://db:27017/testAPI",
 
   // Number of rounds for the password encryption
   ROUNDS: 8,
