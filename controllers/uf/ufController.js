@@ -55,7 +55,7 @@ exports.create = async function (req, res, next) {
 
 // Get one Uf
 exports.get = async function (req, res, next) {
-    await Uf.findOne({ _id: req.params.uf_id }, function (err, doc) {
+    Uf.findOne({ _id: req.params.uf_id }, function (err, doc) {
         if (err) {
             return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
                 message: ResponseMessage.DATABASE_ERROR,
