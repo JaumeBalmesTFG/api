@@ -3,10 +3,33 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../server');
+const jwt = require("jsonwebtoken");
+const User = require("../models/auth/User");
 
 // Assertion Style
 chai.should();
 chai.use(chaiHttp);
+
+var token;
+var  user = {
+    firstName: "username",
+    lastName: "lastname",
+    email: "testusaaer@klendar.com",
+    password: "TYF5Gf%w"
+}
+
+var email = user.email;
+var password = user.password;
+
+before(function(done) {
+    chai.request(server)
+        .post("/register")
+        .send(user)
+        .end(function (err, response) {
+            token = response.body.token;
+            done();
+        });
+});
 
 describe("Login Controller", function () {
     /**
@@ -15,9 +38,10 @@ describe("Login Controller", function () {
      * 200 => login was successful
      */
     it("Correct Request | Should return a 200", function (done) {
-        const user = {
-            email: "test@klendar.com",
-            password: "Klendar123"
+
+        let user =  {
+            email: email,
+            password: password
         }
 
         chai.request(server)
@@ -37,9 +61,10 @@ describe("Login Controller", function () {
      * 406 => Invalid request body
      */
     it("Unallowed Body Request Schema Fields | Should return a 406 status code", function (done) {
-        const user = {
-            test: "troll",
-            email: "test@klendar.com"
+
+        let user =  {
+            test: "test",
+            password: password
         }
 
         chai.request(server)
@@ -63,7 +88,7 @@ describe("Login Controller", function () {
      */
     it("Empty Email | Should return a 406 status code", function (done) {
         const user = {
-            password: "Klendar123"
+            password: password
         }
 
         chai.request(server)
@@ -84,7 +109,7 @@ describe("Login Controller", function () {
      */
     it("Empty Password | Should return a 406 status code", function (done) {
         const user = {
-            email: "test@klendar.com"
+            email: email
         }
 
         chai.request(server)
@@ -110,7 +135,7 @@ describe("Login Controller", function () {
     it("Invalid Email Format | Should return a 406 status code", function (done) {
         const user = {
             email: "klendar.com",
-            password: "Klendar123"
+            password: password
         }
 
         chai.request(server)
@@ -133,7 +158,7 @@ describe("Login Controller", function () {
      */
     it("Invalid Password Min Length | Should return a 406 status code", function (done) {
         const user = {
-            email: "test@klendar.com",
+            email: email,
             password: "123"
         }
 
@@ -155,7 +180,7 @@ describe("Login Controller", function () {
      */
     it("Invalid Password Max Length | Should return a 406 status code", function (done) {
         const user = {
-            email: "test@klendar.com",
+            email: email,
             password: "123456789123456789123456789123456789123456789123456789123456789"
         }
 
@@ -177,7 +202,7 @@ describe("Login Controller", function () {
      */
     it("Invalid Password Format [ONLY LW_LETTERS] | Should return a 406 status code", function (done) {
         const user = {
-            email: "test@klendar.com",
+            email: email,
             password: "abcdefghij"
         }
 
@@ -199,7 +224,7 @@ describe("Login Controller", function () {
      */
     it("Invalid Password Format [ONLY LW_LETTERS, UPP_LETTERS] | Should return a 406 status code", function (done) {
         const user = {
-            email: "test@klendar.com",
+            email: email,
             password: "Klendar"
         }
 
@@ -223,8 +248,8 @@ describe("Login Controller", function () {
 
     it("Correct email and password | Should return a 202 status code", function (done) {
         const user = {
-            email: "test@klendar.com",
-            password: "Klendar123"
+            email: email,
+            password: password
         }
 
         chai.request(server)
@@ -245,8 +270,8 @@ describe("Login Controller", function () {
      */
     it("Correct password format only lowercase and uppercase letters, contains numbers, contains special chars  | Should return a 202 status code", function (done) {
         const user = {
-            email: "specialtest@klendar.com",
-            password: "Klendar123!"
+            email: email,
+            password: password
         }
 
         chai.request(server)
@@ -283,5 +308,10 @@ describe("Login Controller", function () {
                 done();
             });
     });
+});
+
+after(async function() {
+    let tokenDecode = jwt.decode(token);
+    await User.deleteOne({_id: tokenDecode._id});
 });
 
