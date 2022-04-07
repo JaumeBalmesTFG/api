@@ -1,15 +1,14 @@
-// Check that module exists and is from the request user
-// Status messages and errors
+
 const {
     HttpStatusCode,
     ResponseMessage, HttpStatusMessage
 } = require('../../../config/status-codes');
 
-// Modules
-const Module = require("../../../models/module/Module");
+// Uf
+const Uf = require('../../../models/uf/Uf');
 
-exports.validateModuleExistsAndIsFromRequestUser = async function (req, res, next) {
-    Module.findOne({ _id: req.body.moduleId, authorId: req.params.authUserId }, function (err, doc) {
+exports.validateUfExistsAndIsFromRequestUser = async function (req, res, next) {
+    Uf.findOne({ _id: req.body.ufId, authorId: req.params.authUserId }, function (err, doc) {
         if (err) {
             return res.status(HttpStatusCode.NOT_FOUND).send({
                 message: ResponseMessage.NOT_EXISTS,

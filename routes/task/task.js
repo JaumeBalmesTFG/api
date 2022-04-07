@@ -2,16 +2,15 @@ const express = require("express");
 const router = express.Router();
 
 // Controller
-const {
-    create
-} = require('../../controllers/task/taskController');
+const { create, update } = require('../../controllers/task/taskController');
 
 // Middleware
-const {
-    isAuthenticatedPrivate
-} = require('../../middlewares/auth/authentication');
+const { isAuthenticated } = require('../../middlewares/auth/authentication');
 
-router.use(isAuthenticatedPrivate);
+// Checkers
+const { validateUfExistsAndIsFromRequestUser } = require('../../middlewares/checker/uf/ufChecker');
+
+router.use(isAuthenticated);
 
 // Routes
 router.post("/", create);
@@ -20,10 +19,7 @@ router.get("/:task_id", function(req, res) {
     //Return message and code
 });
 
-router.put("/:task_id/edit", function(req, res) {
-    //Check that task_id exists and data is valid.
-    //Return message and code
-});
+router.put("/:task_id", update);
 
 router.delete("/:task_id/delete", function(req, res) {
     //check that task_id exists and delete it
