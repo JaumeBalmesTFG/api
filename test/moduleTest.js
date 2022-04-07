@@ -1,16 +1,50 @@
-// Unit Testing /register
+// Unit Testing /module
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../server');
-
+const User = require('../models/auth/User');
+const Module = require('../models/module/Module');
+const jwt = require('jsonwebtoken');
 // Assertion Style
 chai.should();
 chai.use(chaiHttp);
 
-describe("Create Module", function () {
+var token;
+var module_id;
 
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAdXNlcjMuY29tIiwiX2lkIjoiNjI0OGI0YzBiYjYzNzUzMmRmMzViMDJkIiwiaWF0IjoxNjQ4OTMyMDMyfQ.aIfWVauUVaUDwPMr0murf650gal1ZANivWv32CsWp-w";
+before(function(done) {
+    const user = {
+        firstName: "username",
+        lastName: "lastname",
+        email: "usertest@klendar.com",
+        password: "TYF5Gf%w"
+    }
+
+    const module = {
+        name: "Test Module",
+        color: "#00000F"
+    }
+
+    chai.request(server)
+        .post("/register")
+        .send(user)
+        .end(function (err, response) {
+            token = response.body.token;
+            chai.request(server)
+                .post("/module")
+                .set({ "Authorization": `Bearer ${token}` })
+                .send(module)
+                .end(function (err, response) {
+                    console.log(token);
+                    console.log(response.body);
+                    module_id = response.body.body._id;
+                    done();
+                });
+        });
+});
+
+describe("Create Module", function () {
 
     it("[1-Create Module] | Should return a 201 or 409", function (done) {
 
@@ -89,8 +123,6 @@ describe("Create Module", function () {
 });
 
 describe("Update Module", function () {
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAdXNlcjMuY29tIiwiX2lkIjoiNjI0OGI0YzBiYjYzNzUzMmRmMzViMDJkIiwiaWF0IjoxNjQ4OTMyMDMyfQ.aIfWVauUVaUDwPMr0murf650gal1ZANivWv32CsWp-w";
-    const module_id = "624a0d1f466951bccc09260f";
 
     it("[1-Update Module] | Should return a 200, 404, 409, 500", function (done) {
 
@@ -113,8 +145,6 @@ describe("Update Module", function () {
 });
 
 describe("Get Module", function () {
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAdXNlcjMuY29tIiwiX2lkIjoiNjI0OGI0YzBiYjYzNzUzMmRmMzViMDJkIiwiaWF0IjoxNjQ4OTMyMDMyfQ.aIfWVauUVaUDwPMr0murf650gal1ZANivWv32CsWp-w";
-    const module_id = "624a0d1f466951bccc09260f";
 
     it("[1-Get Module] | Should return a 200", function (done) {
         chai.request(server)
@@ -142,9 +172,6 @@ describe("Get Module", function () {
 });
 
 describe("Update Module /Archive", function () {
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAdXNlcjMuY29tIiwiX2lkIjoiNjI0OGI0YzBiYjYzNzUzMmRmMzViMDJkIiwiaWF0IjoxNjQ4OTMyMDMyfQ.aIfWVauUVaUDwPMr0murf650gal1ZANivWv32CsWp-w";
-    const module_id = "624a0d1f466951bccc09260f";
-
 
     it("[1-Archive Module] | Should return a 200", function (done) {
 
@@ -201,5 +228,10 @@ describe("Update Module /Archive", function () {
     });
 });
 
+after(async function() {
+    let tokenDecode = jwt.decode(token);
+    await User.deleteOne({_id: tokenDecode._id});
+    await Module.deleteOne({_id: module_id});
+});
 
 

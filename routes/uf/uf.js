@@ -1,19 +1,26 @@
 const express = require("express");
 const router = express.Router();
 
-router.post("/create", function(req, res) {
-    //Check data is valid (Compare with the model)
-    //Return message and code
-});
+// Controllers
+const {
+    create,
+    update,
+    get
+} = require('../../controllers/uf/ufController');
 
-router.get("/:uf_id", function(req, res) {
-    //Return all the data of the uf_id after checking it exists
-    //Return message and code
-});
+// Middlewares
+const { isAuthenticated } = require('../../middlewares/auth/authentication');
+const { validateUfSchema } = require('../../middlewares/uf/ufValidator');
+const { validateModuleExistsAndIsFromRequestUser } = require ('../../middlewares/checker/module/moduleChecker')
 
-router.put("/:uf_id/edit", function(req, res) {
-    //Check that uf_id exists and data is valid.
-    //Return message and code
-});
+// Auth
+router.use(isAuthenticated);
+
+/**
+ * CRUD
+ */
+router.post("/create", [validateUfSchema, validateModuleExistsAndIsFromRequestUser], create);
+router.get("/:uf_id", get);
+router.put("/:uf_id/edit", [validateUfSchema, validateModuleExistsAndIsFromRequestUser], update);
 
 module.exports = router;
