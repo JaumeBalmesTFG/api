@@ -92,7 +92,6 @@ exports.update = async function (req, res, next) {
 exports.remove = async function (req, res, next) {
     Task.findOneAndDelete({ _id: req.params.task_id, authorId: req.authUserId }, function (err, doc) {
         if (err || !doc) {
-            console.log(err);
             return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
                 error: ResponseMessage.DATABASE_ERROR,
                 path: req.originalUrl,
