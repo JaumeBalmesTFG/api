@@ -60,8 +60,6 @@ describe("Create UF", function () {
             .set({ "Authorization": `Bearer ${token}` })
             .send(uf)
             .end(function (err, response) {
-                console.log(createdUfId);
-                console.log(response.body);
                 response.status.should.to.be.oneOf([201, 409]);
                 response.body.message.should.to.be.oneOf(["ALREADY_EXISTS", "UF_CREATED"]);
                 createdUfId = response.body.body._id;
@@ -82,7 +80,6 @@ describe("Create UF", function () {
             .set({ "Authorization": `Bearer ${token}` })
             .send(uf)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.message.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -103,7 +100,6 @@ describe("Create UF", function () {
             .set({ "Authorization": `Bearer ${token}` })
             .send(uf)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.message.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -127,7 +123,6 @@ describe("Update Uf", function () {
             .set({ "Authorization": `Bearer ${token}` })
             .send(uf)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.oneOf([200, 404, 409, 500]);
                 response.body.message.should.to.be.oneOf(["OK", "NOT_FOUND", "ALREADY_EXISTS", "DATABASE_ERROR", ]);
                 done();
@@ -142,7 +137,6 @@ describe("Get Uf", function () {
             .get(`/uf/${createdUfId}`)
             .set({ "Authorization": `Bearer ${token}` })
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(200);
                 response.body.message.should.to.be.equal("OK");
                 done();
@@ -154,7 +148,6 @@ describe("Get Uf", function () {
             .get(`/uf/${createdUfId}0`)
             .set({ "Authorization": `Bearer ${token}` })
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(500);
                 response.body.message.should.to.be.equal("DATABASE_ERROR");
                 done();

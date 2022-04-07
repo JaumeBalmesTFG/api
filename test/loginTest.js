@@ -48,7 +48,6 @@ describe("Login Controller", function () {
             .post("/login")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(202);
                 response.body.message.should.to.be.equal("LOGIN_SUCCESSFUL");
                 done();
@@ -71,7 +70,6 @@ describe("Login Controller", function () {
             .post("/login")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.error.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -95,7 +93,6 @@ describe("Login Controller", function () {
             .post("/login")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.error.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -116,7 +113,6 @@ describe("Login Controller", function () {
             .post("/login")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.error.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -142,7 +138,6 @@ describe("Login Controller", function () {
             .post("/login")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.error.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -166,7 +161,6 @@ describe("Login Controller", function () {
             .post("/login")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.error.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -188,7 +182,6 @@ describe("Login Controller", function () {
             .post("/login")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.error.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -210,7 +203,6 @@ describe("Login Controller", function () {
             .post("/login")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.error.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -232,7 +224,6 @@ describe("Login Controller", function () {
             .post("/login")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.error.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -256,7 +247,6 @@ describe("Login Controller", function () {
             .post("/login")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(202);
                 response.body.message.should.to.be.equal("LOGIN_SUCCESSFUL");
                 done();
@@ -278,7 +268,6 @@ describe("Login Controller", function () {
             .post("/login")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(202);
                 response.body.message.should.to.be.equal("LOGIN_SUCCESSFUL");
                 done();
@@ -302,7 +291,6 @@ describe("Login Controller", function () {
             .post("/login")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.error.should.to.be.equal("NOT_ACCEPTABLE");
                 done();

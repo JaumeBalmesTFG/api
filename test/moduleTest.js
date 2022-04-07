@@ -36,8 +36,6 @@ before(function(done) {
                 .set({ "Authorization": `Bearer ${token}` })
                 .send(module)
                 .end(function (err, response) {
-                    console.log(token);
-                    console.log(response.body);
                     module_id = response.body.body._id;
                     done();
                 });
@@ -58,7 +56,6 @@ describe("Create Module", function () {
             .set({ "Authorization": `Bearer ${token}` })
             .send(module)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.oneOf([201, 409]);
                 response.body.message.should.to.be.oneOf(["ALREADY_EXISTS", "MODULE_CREATED"]);
                 done();
@@ -76,7 +73,6 @@ describe("Create Module", function () {
             .set({ "Authorization": `Bearer ${token}` })
             .send(module)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.message.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -95,7 +91,6 @@ describe("Create Module", function () {
             .set({ "Authorization": `Bearer ${token}` })
             .send(module)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.message.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -114,7 +109,6 @@ describe("Create Module", function () {
             .set({ "Authorization": `Bearer ${token}` })
             .send(module)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.message.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -136,7 +130,6 @@ describe("Update Module", function () {
             .set({ "Authorization": `Bearer ${token}` })
             .send(module)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.oneOf([200, 404, 409, 500]);
                 response.body.message.should.to.be.oneOf(["OK", "NOT_FOUND", "ALREADY_EXISTS", "DATABASE_ERROR", ]);
                 done();
@@ -151,7 +144,6 @@ describe("Get Module", function () {
             .get(`/module/${module_id}`)
             .set({ "Authorization": `Bearer ${token}` })
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(200);
                 response.body.message.should.to.be.equal("OK");
                 done();
@@ -163,7 +155,6 @@ describe("Get Module", function () {
             .get(`/module/${module_id}0`)
             .set({ "Authorization": `Bearer ${token}` })
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(400);
                 response.body.message.should.to.be.equal("BAD_REQUEST");
                 done();
@@ -184,7 +175,6 @@ describe("Update Module /Archive", function () {
             .set({ "Authorization": `Bearer ${token}` })
             .send(module)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(200);
                 response.body.message.should.to.be.equal("OK");
                 done();
@@ -202,7 +192,6 @@ describe("Update Module /Archive", function () {
             .set({ "Authorization": `Bearer ${token}` })
             .send(module)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.message.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -220,7 +209,6 @@ describe("Update Module /Archive", function () {
             .set({ "Authorization": `Bearer ${token}` })
             .send(module)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(400);
                 response.body.message.should.to.be.equal("BAD_REQUEST");
                 done();
