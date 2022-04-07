@@ -1,23 +1,26 @@
 const express = require("express");
 const router = express.Router();
 
-router.post("/create", function(req, res) {
-    //Check data is valid (Compare with the model)
-    //Return message and code
-});
+// Controllers
+const {
+    remove,
+    create,
+    update,
+    get,
+} = require('../../controllers/truancy/truancyController');
 
-router.get("/:truancy_id", function(req, res) {
-    //Return all the data of the truancy_id after checking it exists
-    //Return message and code
-});
+// Middlewares
+const { isAuthenticated } = require('../../middlewares/auth/authentication');
+const { validateTruancySchema } = require('../../middlewares/truancy/truancyValidator');
 
-router.put("/:truancy_id/edit", function(req, res) {
-    //Check that truancy_id exists and data is valid.
-    //Return message and code
-});
+// Auth
+router.use(isAuthenticated);
 
-router.delete("/:truancy_id/delete", function(req, res) {
-    //check that truancy_id exsits and delete it
-});
-
+/**
+ * CRUD
+ */
+router.post("/create", validateTruancySchema, create);
+router.put("/:truancy_id/edit", validateTruancySchema, update);
+router.get("/:truancy_id", get);
+router.delete("/:truancy_id/delete", remove);
 module.exports = router;

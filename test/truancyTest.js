@@ -1,28 +1,33 @@
-// Unit Testing /module
+// Unit Testing /uf
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../server');
 const User = require('../models/auth/User');
 const Module = require('../models/module/Module');
+const Uf = require('../models/uf/Uf');
+const Truancy = require('../models/truancy/Truancy')
 const jwt = require('jsonwebtoken');
+const {HttpStatusCode, HttpStatusMessage} = require("../config/status-codes");
 // Assertion Style
 chai.should();
 chai.use(chaiHttp);
 
 var token;
 var module_id;
+var uf_id;
+var createdTruancyId;
 
 before(function(done) {
     const user = {
         firstName: "username",
         lastName: "lastname",
-        email: "usertest@klendar.com",
+        email: "userttesett@klendar.com",
         password: "TYF5Gf%w"
     }
 
     const module = {
-        name: "Test Module",
+        name: "Tests Modqweules",
         color: "#00000F"
     }
 
@@ -37,77 +42,78 @@ before(function(done) {
                 .send(module)
                 .end(function (err, response) {
                     module_id = response.body.body._id;
-                    done();
+                    const uf = {
+                        moduleId: module_id,
+                        name: "Testthisqweufnow",
+                        hours: 100,
+                        truancy_percentage: 20,
+                    }
+                    chai.request(server)
+                        .post("/uf/create")
+                        .set({ "Authorization": `Bearer ${token}` })
+                        .send(uf)
+                        .end(function (err, response) {
+                            uf_id = response.body.body._id;
+                            done();
+                        });
                 });
         });
 });
 
-describe("Create Module", function () {
+describe("Create Truancy", function () {
 
-    it("[1-Create Module] | Should return a 201 or 409", function (done) {
+    it("[1-Create Truancy] | Should return a 201 or 409", function (done) {
 
-        let module = {
-            name: "Java 123",
-            color: "#00000F"
+        let truancy = {
+            ufId: uf_id,
+            date: Date.now(),
+            reason: "Campaneo",
+            hours: 1,
         }
 
         chai.request(server)
-            .post("/module")
+            .post("/truancy/create")
             .set({ "Authorization": `Bearer ${token}` })
-            .send(module)
+            .send(truancy)
             .end(function (err, response) {
                 response.status.should.to.be.oneOf([201, 409]);
-                response.body.message.should.to.be.oneOf(["ALREADY_EXISTS", "MODULE_CREATED"]);
+                response.body.message.should.to.be.oneOf(["ALREADY_EXISTS", "TRUANCY_CREATED"]);
+                createdTruancyId = response.body.body._id;
                 done();
             });
     });
 
     it("[2- Invalid Schema] | Should return 406", function (done) {
 
-        let module = {
-            name: "Java 1"
-        };
+        let truancy = {
+            ufId: uf_id,
+            date: Date.now()
+        }
 
         chai.request(server)
-            .post("/module")
+            .post("/truancy/create")
             .set({ "Authorization": `Bearer ${token}` })
-            .send(module)
+            .send(truancy)
             .end(function (err, response) {
                 response.status.should.to.be.equal(406);
                 response.body.message.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
             });
     });
-    
+
     it("[3- Invalid Patterns] | Should return 406", function (done) {
 
-        let module = {
-            name: "Java 1¿",
-            color: "#00000F"
-        };
+        let truancy = {
+            ufId: uf_id,
+            date: Date.now(),
+            reason: "Campaneo",
+            hours: "Si",
+        }
 
         chai.request(server)
-            .post("/module")
+            .post("/truancy/create")
             .set({ "Authorization": `Bearer ${token}` })
-            .send(module)
-            .end(function (err, response) {
-                response.status.should.to.be.equal(406);
-                response.body.message.should.to.be.equal("NOT_ACCEPTABLE");
-                done();
-            });
-    });
-
-    it("[4- Invalid Patterns] | Should return 406", function (done) {
-
-        let module = {
-            name: "Java 1",
-            color: "#00000F¿"
-        };
-
-        chai.request(server)
-            .post("/module")
-            .set({ "Authorization": `Bearer ${token}` })
-            .send(module)
+            .send(truancy)
             .end(function (err, response) {
                 response.status.should.to.be.equal(406);
                 response.body.message.should.to.be.equal("NOT_ACCEPTABLE");
@@ -116,19 +122,21 @@ describe("Create Module", function () {
     });
 });
 
-describe("Update Module", function () {
+describe("Update Truancy", function () {
 
-    it("[1-Update Module] | Should return a 200, 404, 409, 500", function (done) {
+    it("[1-Update Truancy] | Should return a 200, 404, 409, 500", function (done) {
 
-        let module = {
-            name: "Java Course 1",
-            color: "#00000F"
+        let truancy = {
+            ufId: uf_id,
+            date: Date.now(),
+            reason: "Campaneo",
+            hours: 1,
         }
 
         chai.request(server)
-            .put(`/module/${module_id}`)
+            .put(`/truancy/${createdTruancyId}/edit`)
             .set({ "Authorization": `Bearer ${token}` })
-            .send(module)
+            .send(truancy)
             .end(function (err, response) {
                 response.status.should.to.be.oneOf([200, 404, 409, 500]);
                 response.body.message.should.to.be.oneOf(["OK", "NOT_FOUND", "ALREADY_EXISTS", "DATABASE_ERROR", ]);
@@ -137,11 +145,11 @@ describe("Update Module", function () {
     });
 });
 
-describe("Get Module", function () {
+describe("Get Truancy", function () {
 
-    it("[1-Get Module] | Should return a 200", function (done) {
+    it("[1-Get Truancy] | Should return a 200", function (done) {
         chai.request(server)
-            .get(`/module/${module_id}`)
+            .get(`/truancy/${createdTruancyId}`)
             .set({ "Authorization": `Bearer ${token}` })
             .end(function (err, response) {
                 response.status.should.to.be.equal(200);
@@ -150,67 +158,38 @@ describe("Get Module", function () {
             });
     });
 
-    it("[2-Get Module] | Should return a 400", function (done) {
+    it("[2-Get Truancy] | Should return a 406", function (done) {
         chai.request(server)
-            .get(`/module/${module_id}0`)
+            .get(`/truancy/${createdTruancyId}0`)
             .set({ "Authorization": `Bearer ${token}` })
             .end(function (err, response) {
-                response.status.should.to.be.equal(400);
-                response.body.message.should.to.be.equal("BAD_REQUEST");
+                response.status.should.to.be.equal(HttpStatusCode.BAD_REQUEST);
+                response.body.message.should.to.be.equal(HttpStatusMessage.BAD_REQUEST);
                 done();
             });
     });
 });
 
-describe("Update Module /Archive", function () {
+describe("Delete Truancy", function () {
 
-    it("[1-Archive Module] | Should return a 200", function (done) {
-
-        let module = {
-            archived: true
-        }
-
+    it("[2-Delete Truancy] | Should return a 406", function (done) {
         chai.request(server)
-            .put(`/module/${module_id}/archive`)
+            .delete(`/truancy/${createdTruancyId}0/delete`)
             .set({ "Authorization": `Bearer ${token}` })
-            .send(module)
+            .end(function (err, response) {
+                response.status.should.to.be.equal(HttpStatusCode.BAD_REQUEST);
+                response.body.message.should.to.be.equal(HttpStatusMessage.BAD_REQUEST);
+                done();
+            });
+    });
+
+    it("[1-Delete Truancy] | Should return a 200", function (done) {
+        chai.request(server)
+            .delete(`/truancy/${createdTruancyId}/delete`)
+            .set({ "Authorization": `Bearer ${token}` })
             .end(function (err, response) {
                 response.status.should.to.be.equal(200);
                 response.body.message.should.to.be.equal("OK");
-                done();
-            });
-    });
-
-    it("[2-Archive Module, Invalid Schema] | Should return a 406", function (done) {
-
-        let module = {
-            archivedd: true
-        }
-
-        chai.request(server)
-            .put(`/module/${module_id}/archive`)
-            .set({ "Authorization": `Bearer ${token}` })
-            .send(module)
-            .end(function (err, response) {
-                response.status.should.to.be.equal(406);
-                response.body.message.should.to.be.equal("NOT_ACCEPTABLE");
-                done();
-            });
-    });
-
-    it("[3-Archive Module, No Valid ObjectId] | Should return a 404", function (done) {
-
-        let module = {
-            archived: true
-        }
-
-        chai.request(server)
-            .put(`/module/${module_id}0/archive`)
-            .set({ "Authorization": `Bearer ${token}` })
-            .send(module)
-            .end(function (err, response) {
-                response.status.should.to.be.equal(400);
-                response.body.message.should.to.be.equal("BAD_REQUEST");
                 done();
             });
     });
@@ -220,6 +199,8 @@ after(async function() {
     let tokenDecode = jwt.decode(token);
     await User.deleteOne({_id: tokenDecode._id});
     await Module.deleteOne({_id: module_id});
+    await Uf.deleteOne({_id: uf_id});
+    await Truancy.deleteOne({_id: createdTruancyId});
 });
 
 
