@@ -5,15 +5,15 @@ RUN mkdir -p /opt/api/
 WORKDIR /opt/api/
 
 # Copy and install
-COPY package*.json .
+COPY package.json/ /opt/api/
+COPY package-lock.json/ /opt/api/
 RUN npm install --quiet
 
 # Copy the rest of file
-COPY . .
+COPY ./ /opt/api/
 
 # Open aplication ports
 EXPOSE 8080
 
 # Run aplication
 CMD ["npm", "run", "prod"]
-
