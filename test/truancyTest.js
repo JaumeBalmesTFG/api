@@ -22,12 +22,12 @@ before(function(done) {
     const user = {
         firstName: "username",
         lastName: "lastname",
-        email: "userttestt@klendar.com",
+        email: "userttesett@klendar.com",
         password: "TYF5Gf%w"
     }
 
     const module = {
-        name: "Tests Modules",
+        name: "Tests Modqweules",
         color: "#00000F"
     }
 
@@ -172,8 +172,35 @@ describe("Get Truancy", function () {
             .set({ "Authorization": `Bearer ${token}` })
             .end(function (err, response) {
                 console.log(response.body);
-                response.status.should.to.be.equal(HttpStatusCode.NOT_ACCEPTABLE);
-                response.body.message.should.to.be.equal(HttpStatusMessage.NOT_ACCEPTABLE);
+                response.status.should.to.be.equal(HttpStatusCode.BAD_REQUEST);
+                response.body.message.should.to.be.equal(HttpStatusMessage.BAD_REQUEST);
+                done();
+            });
+    });
+});
+
+describe("Delete Truancy", function () {
+
+    it("[2-Delete Truancy] | Should return a 406", function (done) {
+        chai.request(server)
+            .delete(`/truancy/${createdTruancyId}0/delete`)
+            .set({ "Authorization": `Bearer ${token}` })
+            .end(function (err, response) {
+                console.log(response.body);
+                response.status.should.to.be.equal(HttpStatusCode.BAD_REQUEST);
+                response.body.message.should.to.be.equal(HttpStatusMessage.BAD_REQUEST);
+                done();
+            });
+    });
+
+    it("[1-Delete Truancy] | Should return a 200", function (done) {
+        chai.request(server)
+            .delete(`/truancy/${createdTruancyId}/delete`)
+            .set({ "Authorization": `Bearer ${token}` })
+            .end(function (err, response) {
+                console.log(response.body);
+                response.status.should.to.be.equal(200);
+                response.body.message.should.to.be.equal("OK");
                 done();
             });
     });

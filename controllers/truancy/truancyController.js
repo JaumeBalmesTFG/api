@@ -40,8 +40,8 @@ exports.create = async function (req, res, next) {
 exports.get = async function (req, res, next) {
 
     if(!checkPathObjectId(req.params.truancy_id)){
-        return res.status(HttpStatusCode.NOT_ACCEPTABLE).send({
-            message: HttpStatusMessage.NOT_ACCEPTABLE,
+        return res.status(HttpStatusCode.BAD_REQUEST).send({
+            message: HttpStatusMessage.BAD_REQUEST,
             path: req.originalUrl,
             method: req.method,
             body: req.body
@@ -127,7 +127,7 @@ exports.remove = async function (req, res, next) {
         });
     }
 
-    const match = await Module.findOne({  _id: req.params.truancy_id });
+    const match = await Truancy.findOne({  _id: req.params.truancy_id });
 
     if(!match){
         return res.status(HttpStatusCode.NOT_FOUND).send({
