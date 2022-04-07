@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 // Controller
-const { create, update, remove } = require('../../controllers/task/taskController');
+const { create, update, remove, get } = require('../../controllers/task/taskController');
 
 // Middleware
 const { isAuthenticated } = require('../../middlewares/auth/authentication');
@@ -14,11 +14,7 @@ router.use(isAuthenticated);
 
 // Routes
 router.post("/", create);
-router.get("/:task_id", function (req, res) {
-    //Return all the data of the task_id after checking it exists
-    //Return message and code
-});
-
+router.get("/:task_id", get);
 router.put("/:task_id", update);
 router.delete("/:task_id", remove);
 
