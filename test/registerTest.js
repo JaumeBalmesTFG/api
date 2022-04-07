@@ -36,7 +36,6 @@ describe("Register Controller", function () {
             .post("/register")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.oneOf([200, 409]);
                 response.body.message.should.to.be.oneOf(["EMAIL_EXISTS", "USER_CREATED"]);
                 done();
@@ -59,7 +58,6 @@ describe("Register Controller", function () {
             .post("/register")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.error.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -86,7 +84,6 @@ describe("Register Controller", function () {
             .post("/register")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.error.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -110,7 +107,6 @@ describe("Register Controller", function () {
             .post("/register")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.error.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -134,7 +130,6 @@ describe("Register Controller", function () {
             .post("/register")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.error.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -158,7 +153,6 @@ describe("Register Controller", function () {
             .post("/register")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.error.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -186,7 +180,6 @@ describe("Register Controller", function () {
             .post("/register")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.error.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -211,7 +204,6 @@ describe("Register Controller", function () {
             .post("/register")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.error.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -235,7 +227,6 @@ describe("Register Controller", function () {
             .post("/register")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.error.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -261,7 +252,6 @@ describe("Register Controller", function () {
             .post("/register")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.error.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -285,7 +275,6 @@ describe("Register Controller", function () {
             .post("/register")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.error.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -309,7 +298,6 @@ describe("Register Controller", function () {
             .post("/register")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.error.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -333,7 +321,6 @@ describe("Register Controller", function () {
             .post("/register")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.error.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
@@ -358,7 +345,6 @@ describe("Register Controller", function () {
             .post("/register")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.oneOf([201, 409]);
                 response.body.message.should.to.be.oneOf(["EMAIL_EXISTS", "USER_CREATED"]);
                 done();
@@ -383,7 +369,6 @@ describe("Register Controller", function () {
             .post("/register")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.oneOf([201, 409]);
                 response.body.message.should.to.be.oneOf(["EMAIL_EXISTS", "USER_CREATED"]);
                 done();
@@ -407,7 +392,6 @@ describe("Register Controller", function () {
             .post("/register")
             .send(user)
             .end(function (err, response) {
-                console.log(response.body);
                 response.status.should.to.be.equal(406);
                 response.body.error.should.to.be.equal("NOT_ACCEPTABLE");
                 done();
