@@ -9,12 +9,12 @@ const {
 } = require('../../controllers/uf/ufController');
 
 // Middlewares
-const { isAuthenticatedPrivate } = require('../../middlewares/auth/authentication');
+const { isAuthenticated } = require('../../middlewares/auth/authentication');
 const { validateUfSchema } = require('../../middlewares/uf/ufValidator');
 const { validateModuleExistsAndIsFromRequestUser } = require ('../../middlewares/checker/module/moduleChecker')
 
 // Auth
-router.use(isAuthenticatedPrivate);
+router.use(isAuthenticated);
 
 /**
  * CRUD
