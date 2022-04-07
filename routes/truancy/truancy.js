@@ -10,17 +10,17 @@ const {
 } = require('../../controllers/truancy/truancyController');
 
 // Middlewares
-const { isAuthenticatedPrivate } = require('../../middlewares/auth/authentication');
+const { isAuthenticated } = require('../../middlewares/auth/authentication');
 const { validateTruancySchema } = require('../../middlewares/truancy/truancyValidator');
 
 // Auth
-router.use(isAuthenticatedPrivate);
+router.use(isAuthenticated);
 
 /**
  * CRUD
  */
 router.post("/create", validateTruancySchema, create);
-router.put("/:truancy_id", validateTruancySchema, update);
+router.put("/:truancy_id/edit", validateTruancySchema, update);
 router.get("/:truancy_id", get);
 router.delete("/:truancy_id/delete", remove);
 
