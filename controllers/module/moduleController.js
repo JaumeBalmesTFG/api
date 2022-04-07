@@ -69,7 +69,7 @@ exports.get = async function (req, res, next) {
         });
     }
 
-    await Module.findOne({ _id: req.params.module_id }, function (err, doc) {
+    Module.findOne({ _id: req.params.module_id }, function (err, doc) {
         if (err) {
             return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
                 message: ResponseMessage.DATABASE_ERROR,

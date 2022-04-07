@@ -1,4 +1,4 @@
-// Unit Testing /register
+// Unit Testing /module
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
