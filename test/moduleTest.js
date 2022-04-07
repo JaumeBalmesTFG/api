@@ -158,14 +158,14 @@ describe("Get Module", function () {
             });
     });
 
-    it("[2-Get Module] | Should return a 500", function (done) {
+    it("[2-Get Module] | Should return a 400", function (done) {
         chai.request(server)
             .get(`/module/${module_id}0`)
             .set({ "Authorization": `Bearer ${token}` })
             .end(function (err, response) {
                 console.log(response.body);
-                response.status.should.to.be.equal(500);
-                response.body.message.should.to.be.equal("DATABASE_ERROR");
+                response.status.should.to.be.equal(400);
+                response.body.message.should.to.be.equal("BAD_REQUEST");
                 done();
             });
     });
