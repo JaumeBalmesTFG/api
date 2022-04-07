@@ -78,7 +78,7 @@ exports.update = async function (req, res, next) {
 
     const { moduleId, name, hours, truancy_percentage } = req.body;
 
-    const doc = await Uf.findOne({ _id: req.params.uf_id, moduleId: moduleId, name: name });
+    const doc = await Uf.findOne({ _id: req.params.uf_id, moduleId: moduleId});
 
     if(!doc){
         return res.status(HttpStatusCode.NOT_FOUND).send({
