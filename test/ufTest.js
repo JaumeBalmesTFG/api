@@ -13,7 +13,6 @@ chai.use(chaiHttp);
 
 var token;
 var module_id;
-var uf_id;
 var createdUfId;
 
 before(function(done) {
@@ -23,7 +22,7 @@ before(function(done) {
         email: "userttest@klendar.com",
         password: "TYF5Gf%w"
     }
-
+    
     const module = {
         name: "Tests Module",
         color: "#00000F"
@@ -40,22 +39,7 @@ before(function(done) {
                 .send(module)
                 .end(function (err, response) {
                     module_id = response.body.body._id;
-                    const uf = {
-                        moduleId: module_id,
-                        name: "Testthisqweufnow",
-                        hours: 100,
-                        truancy_percentage: 20,
-                    }
-                    chai.request(server)
-                        .post("/uf/create")
-                        .set({ "Authorization": `Bearer ${token}` })
-                        .send(uf)
-                        .end(function (err, response) {
-                            console.log(response.body);
-                            uf_id = response.body.body._id;
-                            console.log(uf_id);
-                            done();
-                        });
+                    done();
                 });
         });
 });
@@ -76,7 +60,7 @@ describe("Create UF", function () {
             .set({ "Authorization": `Bearer ${token}` })
             .send(uf)
             .end(function (err, response) {
-                console.log(uf_id);
+                console.log(createdUfId);
                 console.log(response.body);
                 response.status.should.to.be.oneOf([201, 409]);
                 response.body.message.should.to.be.oneOf(["ALREADY_EXISTS", "UF_CREATED"]);
@@ -139,7 +123,7 @@ describe("Update Uf", function () {
         }
 
         chai.request(server)
-            .put(`/uf/${uf_id}/edit`)
+            .put(`/uf/${createdUfId}/edit`)
             .set({ "Authorization": `Bearer ${token}` })
             .send(uf)
             .end(function (err, response) {
@@ -155,7 +139,7 @@ describe("Get Uf", function () {
 
     it("[1-Get Uf] | Should return a 200", function (done) {
         chai.request(server)
-            .get(`/uf/${uf_id}`)
+            .get(`/uf/${createdUfId}`)
             .set({ "Authorization": `Bearer ${token}` })
             .end(function (err, response) {
                 console.log(response.body);
@@ -167,7 +151,7 @@ describe("Get Uf", function () {
 
     it("[2-Get Uf] | Should return a 500", function (done) {
         chai.request(server)
-            .get(`/uf/${uf_id}0`)
+            .get(`/uf/${createdUfId}0`)
             .set({ "Authorization": `Bearer ${token}` })
             .end(function (err, response) {
                 console.log(response.body);
@@ -182,7 +166,6 @@ after(async function() {
     let tokenDecode = jwt.decode(token);
     await User.deleteOne({_id: tokenDecode._id});
     await Module.deleteOne({_id: module_id});
-    await Uf.deleteOne({_id: uf_id});
     await Uf.deleteOne({_id: createdUfId});
 });
 
