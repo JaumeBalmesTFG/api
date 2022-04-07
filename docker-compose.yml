@@ -3,19 +3,19 @@ services:
   app:
     restart: always
     build:
-      context: .
+      context: ./
       dockerfile: Dockerfile
     ports:
-      - 8000:8080
+      - "8080:8080"
     volumes:
-      - ./:/api
+      - ./:/api/
     depends_on:
       - db
   db:
     image: mongo
     ports:
-      - 27017:27017
+      - "27017:27017"
     volumes:
-      - mongodb:/data/db
+      - mongodb:/data/db/
 volumes:
   mongodb:
