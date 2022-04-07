@@ -10,11 +10,11 @@ const {
 } = require('../../controllers/module/moduleController');
 
 // Middlewares
-const { isAuthenticatedPrivate } = require('../../middlewares/auth/authentication');
+const { isAuthenticated } = require('../../middlewares/auth/authentication');
 const { validateModuleSchema, validateModuleArchivedSchema } = require('../../middlewares/module/moduleValidator');
 
 // Auth
-router.use(isAuthenticatedPrivate);
+router.use(isAuthenticated);
 
 /**
  * CRUD
