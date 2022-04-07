@@ -3,14 +3,12 @@ const router = express.Router();
 
 // Private Route Auth
 const {
-    isAuthenticatedPrivate
+    isAuthenticated
 } = require('../middlewares/auth/authentication');
 
-router.use(isAuthenticatedPrivate);
+router.use(isAuthenticated);
 
 router.post("/", function(req, res, next){
-    console.log(req.authUserId);
-    console.log(req.email);
     return res.send(req.body);
 });
 

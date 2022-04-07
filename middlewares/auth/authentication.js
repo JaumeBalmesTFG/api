@@ -1,39 +1,27 @@
 // Private Route Validator
 
-const {
-    checkToken
-} = require('../../services/token');
+const { checkToken } = require('../../services/token');
+const { HttpStatusCode, HttpStatusMessage, ResponseMessage } = require('../../config/status-codes');
 
-exports.isAuthenticatedPublic = async function(req, res, next){
-    try {
-        var authorization = req.get('Authorization');
-        const token = authorization.replace('Bearer', '').trim();
+exports.isAuthenticated = async function (req, res, next) {
 
-        if(await checkToken(token)){
-            return res.send("redirect to calendar, user authorized");
-        }
+    let authHeader = req.get('Authorization');
 
-        next();
-
-    } catch (error) { return; }
-};
-
-exports.isAuthenticatedPrivate = async function(req, res, next){
-    try {
-        var authorization = req.get('Authorization');
-
-        const token = authorization.replace('Bearer', '').trim();
-
+    if (authHeader) {
+        const token = authHeader.replace('Bearer', '').trim();
         const decoded = await checkToken(token);
 
-        if(!decoded){
-            return res.send("return to login page, user not authorized");
+        if (decoded) {
+            req.authUserId = decoded._id;
+            req.email = decoded.email;
+            return next();
         }
-        req.authUserId = decoded._id;
-        req.email = decoded.email;
+    }
 
-        next();
-
-    } catch (error) { return; }
+    return res.status(HttpStatusCode.UNAUTHORIZED).send({
+        message: HttpStatusMessage.UNAUTHORIZED,
+        path: req.originalUrl,
+        method: req.method,
+    });
 };
 

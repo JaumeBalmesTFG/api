@@ -1,23 +1,21 @@
 const express = require("express");
 const router = express.Router();
 
-router.post("/create", function(req, res) {
-    //Check data is valid (Compare with the model)
-    //Return message and code
-});
+// Controller
+const { create, update, remove, get } = require('../../controllers/task/taskController');
 
-router.get("/:task_id", function(req, res) {
-    //Return all the data of the task_id after checking it exists
-    //Return message and code
-});
+// Middleware
+const { isAuthenticated } = require('../../middlewares/auth/authentication');
 
-router.put("/:task_id/edit", function(req, res) {
-    //Check that task_id exists and data is valid.
-    //Return message and code
-});
+// Checkers
+const { validateUfExistsAndIsFromRequestUser } = require('../../middlewares/checker/uf/ufChecker');
 
-router.delete("/:task_id/delete", function(req, res) {
-    //check that task_id exists and delete it
-});
+router.use(isAuthenticated);
+
+// Routes
+router.post("/", create);
+router.get("/:task_id", get);
+router.put("/:task_id", update);
+router.delete("/:task_id", remove);
 
 module.exports = router;

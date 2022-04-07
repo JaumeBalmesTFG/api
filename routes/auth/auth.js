@@ -7,7 +7,6 @@ const auth = require('../../controllers/auth/authController');
 // Middlewares
 const { validateUserSchema } = require('../../middlewares/user/userRegisterValidator');
 const { validateUserLoginSchema } = require("../../middlewares/user/userLoginValidator");
-const { isAuthenticatedPublic } = require('../../middlewares/auth/authentication');
 
 /** Auth Routes **/
 router.post("/auth", function (req, res) {
