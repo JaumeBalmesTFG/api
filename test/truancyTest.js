@@ -8,6 +8,7 @@ const Module = require('../models/module/Module');
 const Uf = require('../models/uf/Uf');
 const Truancy = require('../models/truancy/Truancy')
 const jwt = require('jsonwebtoken');
+const {HttpStatusCode, HttpStatusMessage} = require("../config/status-codes");
 // Assertion Style
 chai.should();
 chai.use(chaiHttp);
@@ -15,19 +16,18 @@ chai.use(chaiHttp);
 var token;
 var module_id;
 var uf_id;
-var truancy_id;
 var createdTruancyId;
 
 before(function(done) {
     const user = {
         firstName: "username",
         lastName: "lastname",
-        email: "userttest@klendar.com",
+        email: "userttestt@klendar.com",
         password: "TYF5Gf%w"
     }
 
     const module = {
-        name: "Tests Module",
+        name: "Tests Modules",
         color: "#00000F"
     }
 
@@ -53,24 +53,9 @@ before(function(done) {
                         .set({ "Authorization": `Bearer ${token}` })
                         .send(uf)
                         .end(function (err, response) {
+                            console.log(response.body);
                             uf_id = response.body.body._id;
-
-                            const truancy = {
-                                ufId: uf_id,
-                                date: Date.now(),
-                                reason: "Campana",
-                                hours: 1,
-                            }
-
-                            chai.request(server)
-                                .post("/truancy/create")
-                                .set({ "Authorization": `Bearer ${token}` })
-                                .send(truancy)
-                                .end(function (err, response) {
-                                    console.log(response.body);
-                                    truancy_id = response.body.body._id;
-                                    done();
-                                });
+                            console.log(uf_id);
                             done();
                         });
                 });
@@ -96,7 +81,7 @@ describe("Create Truancy", function () {
                 console.log(uf_id);
                 console.log(response.body);
                 response.status.should.to.be.oneOf([201, 409]);
-                response.body.message.should.to.be.oneOf(["ALREADY_EXISTS", "UF_CREATED"]);
+                response.body.message.should.to.be.oneOf(["ALREADY_EXISTS", "TRUANCY_CREATED"]);
                 createdTruancyId = response.body.body._id;
                 done();
             });
@@ -106,8 +91,7 @@ describe("Create Truancy", function () {
 
         let truancy = {
             ufId: uf_id,
-            date: Date.now(),
-            hours: 1,
+            date: Date.now()
         }
 
         chai.request(server)
@@ -152,11 +136,11 @@ describe("Update Truancy", function () {
             ufId: uf_id,
             date: Date.now(),
             reason: "Campaneo",
-            hours: "Si",
+            hours: 1,
         }
 
         chai.request(server)
-            .put(`/truancy/${truancy_id}/edit`)
+            .put(`/truancy/${createdTruancyId}/edit`)
             .set({ "Authorization": `Bearer ${token}` })
             .send(truancy)
             .end(function (err, response) {
@@ -172,7 +156,7 @@ describe("Get Truancy", function () {
 
     it("[1-Get Truancy] | Should return a 200", function (done) {
         chai.request(server)
-            .get(`/truancy/${truancy_id}`)
+            .get(`/truancy/${createdTruancyId}`)
             .set({ "Authorization": `Bearer ${token}` })
             .end(function (err, response) {
                 console.log(response.body);
@@ -182,14 +166,14 @@ describe("Get Truancy", function () {
             });
     });
 
-    it("[2-Get Truancy] | Should return a 500", function (done) {
+    it("[2-Get Truancy] | Should return a 406", function (done) {
         chai.request(server)
-            .get(`/truancy/${truancy_id}0`)
+            .get(`/truancy/${createdTruancyId}0`)
             .set({ "Authorization": `Bearer ${token}` })
             .end(function (err, response) {
                 console.log(response.body);
-                response.status.should.to.be.equal(500);
-                response.body.message.should.to.be.equal("DATABASE_ERROR");
+                response.status.should.to.be.equal(HttpStatusCode.NOT_ACCEPTABLE);
+                response.body.message.should.to.be.equal(HttpStatusMessage.NOT_ACCEPTABLE);
                 done();
             });
     });
@@ -200,8 +184,6 @@ after(async function() {
     await User.deleteOne({_id: tokenDecode._id});
     await Module.deleteOne({_id: module_id});
     await Uf.deleteOne({_id: uf_id});
-    await Uf.deleteOne({_id: createdUfId});
-    await Truancy.deleteOne({_id: truancy_id});
     await Truancy.deleteOne({_id: createdTruancyId});
 });
 

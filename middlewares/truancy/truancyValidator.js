@@ -9,9 +9,9 @@ const {
     ResponseMessage
 } = require('../../config/status-codes');
 
-let moduleSchema = Joi.object({
+let truancySchema = Joi.object({
     ufId: Joi.string()
-        .pattern(/^[A-z0-9\s]+$/)
+        .pattern(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i)
         .min(1)
         .required()
         .messages({
@@ -40,7 +40,7 @@ let moduleSchema = Joi.object({
 });
 
 exports.validateTruancySchema = async function (req, res, next) {
-    await validateTruancySchema.validateAsync(req.body)
+    await truancySchema.validateAsync(req.body)
         .then(function () { return next(); })
         .catch(function (err) {
             return res.status(HttpStatusCode.NOT_ACCEPTABLE).send({

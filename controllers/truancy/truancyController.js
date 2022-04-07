@@ -18,20 +18,6 @@ exports.create = async function (req, res, next) {
 
     const { ufId, date, reason, hours } = req.body;
 
-    const match = await Truancy.findOne({
-        ufId: ufId,
-        name: name
-    });
-
-    if (match) {
-        return res.status(HttpStatusCode.CONFLICT).send({
-            message: ResponseMessage.ALREADY_EXISTS,
-            path: req.originalUrl,
-            method: req.method,
-            body: req.body
-        });
-    }
-
     const newTruancy = new Truancy({
         ufId: ufId,
         date: date,
@@ -40,14 +26,6 @@ exports.create = async function (req, res, next) {
     });
 
     await newTruancy.save(function (err, doc) {
-        if (err) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
-                error: ResponseMessage.DATABASE_ERROR,
-                path: req.originalUrl,
-                method: req.method,
-                body: req.body
-            });
-        }
 
         return res.status(HttpStatusCode.CREATED).send({
             message: 'TRUANCY_' + ResponseMessage.CREATED,
@@ -62,15 +40,15 @@ exports.create = async function (req, res, next) {
 exports.get = async function (req, res, next) {
 
     if(!checkPathObjectId(req.params.truancy_id)){
-        return res.status(HttpStatusCode.BAD_REQUEST).send({
-            message: HttpStatusMessage.BAD_REQUEST,
+        return res.status(HttpStatusCode.NOT_ACCEPTABLE).send({
+            message: HttpStatusMessage.NOT_ACCEPTABLE,
             path: req.originalUrl,
             method: req.method,
             body: req.body
         });
     }
 
-    await Truancy.findOne({ _id: req.params.truancy_id }, function (err, doc) {
+    Truancy.findOne({ _id: req.params.truancy_id }, function (err, doc) {
         if (err) {
             return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
                 message: ResponseMessage.DATABASE_ERROR,
@@ -93,15 +71,15 @@ exports.get = async function (req, res, next) {
 exports.update = async function (req, res, next) {
 
     if(!checkPathObjectId(req.params.truancy_id)){
-        return res.status(HttpStatusCode.BAD_REQUEST).send({
-            message: HttpStatusMessage.BAD_REQUEST,
+        return res.status(HttpStatusCode.NOT_ACCEPTABLE).send({
+            message: HttpStatusMessage.NOT_ACCEPTABLE,
             path: req.originalUrl,
             method: req.method,
             body: req.body
         });
     }
 
-    const { ufId, date, reason, hours } = req.body;
+    const { date, reason, hours } = req.body;
 
     const doc = await Truancy.findOne({ _id: req.params.truancy_id});
 
