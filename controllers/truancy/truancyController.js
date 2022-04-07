@@ -92,9 +92,9 @@ exports.update = async function (req, res, next) {
         });
     }
 
-    doc.date = date
-    doc.reason = reason
-    doc.hours = hours
+    doc.date = date;
+    doc.reason = reason;
+    doc.hours = hours;
 
     await doc.save(function (err, obj){
         if (err) {
