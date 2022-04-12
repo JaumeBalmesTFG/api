@@ -11,7 +11,7 @@ const {
 const userSchema = Joi.object({
     // .pattern(/^[a-z]+$/) ONLY LETTERS
     firstName: Joi.string()
-        .pattern(/^[a-z]+$/)
+        .pattern(/^[A-z]+$/)
         .min(1)
         .max(25)
         .required()
@@ -24,7 +24,7 @@ const userSchema = Joi.object({
         }),
 
     lastName: Joi.string()
-        .pattern(/^[a-z]+$/)
+        .pattern(/^[A-z]+$/)
         .min(1)
         .max(25)
         .required()
