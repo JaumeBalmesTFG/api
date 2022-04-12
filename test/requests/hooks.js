@@ -1,7 +1,7 @@
 // Testing Hooks
 
 module.exports = {
-    register: {
+    user: {
         firstName: "klendarName",
         lastName: "klendarLastName",
         email: "klendar@klendar.com",

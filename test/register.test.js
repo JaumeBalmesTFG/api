@@ -25,24 +25,24 @@ describe('/Register', function () {
 
     // Test Cases
     it('[1]- Register', function (done) {
-        request.register('/register', hooks.register, function (res) {
+        request.auth('/register', hooks.user, function (res) {
             expect(res.status).to.equal(201);
             done();
         })
     });
 
     it('[2]- Invalid Schema', function (done) {
-        request.register('/register', {}, function (res) {
+        request.auth('/register', {}, function (res) {
             expect(res.status).to.equal(406);
             done();
         })
     });
 
     it('[3]- Invalid Password Pattern', function (done) {
-        request.register('/register', {
-            firstName: hooks.register.firstName,
-            lastName: hooks.register.lastName,
-            email: hooks.register.email,
+        request.auth('/register', {
+            firstName: hooks.user.firstName,
+            lastName: hooks.user.lastName,
+            email: hooks.user.email,
             password: "abcdef1"
         }, function (res) {
             expect(res.status).to.equal(406);
@@ -51,11 +51,11 @@ describe('/Register', function () {
     });
 
     it('[4]- Invalid Email Pattern', function (done) {
-        request.register('/register', {
-            firstName: hooks.register.firstName,
-            lastName: hooks.register.lastName,
+        request.auth('/register', {
+            firstName: hooks.user.firstName,
+            lastName: hooks.user.lastName,
             email: 'abcdef',
-            password: hooks.register.password
+            password: hooks.user.password
         }, function (res) {
             expect(res.status).to.equal(406);
             done();
@@ -63,11 +63,11 @@ describe('/Register', function () {
     });
 
     it('[4]- Invalid First Name Pattern', function (done) {
-        request.register('/register', {
+        request.auth('/register', {
             firstName: "abc123",
-            lastName: hooks.register.lastName,
-            email: hooks.register.email,
-            password: hooks.register.password
+            lastName: hooks.user.lastName,
+            email: hooks.user.email,
+            password: hooks.user.password
         }, function (res) {
             expect(res.status).to.equal(406);
             done();
@@ -75,11 +75,11 @@ describe('/Register', function () {
     });
 
     it('[5]- Invalid Last Name Pattern', function (done) {
-        request.register('/register', {
-            firstName: hooks.register.firstName,
+        request.auth('/register', {
+            firstName: hooks.user.firstName,
             lastName: "abc123",
-            email: hooks.register.email,
-            password: hooks.register.password
+            email: hooks.user.email,
+            password: hooks.user.password
         }, function (res) {
             expect(res.status).to.equal(406);
             done();

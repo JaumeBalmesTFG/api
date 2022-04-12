@@ -10,7 +10,7 @@ chai.use(chaiHttp);
 
 function foo(value){  }
 
-exports.register = function(url, data, callback){
+exports.auth = function(url, data, callback){
     const request = chai.request(server).post(url).send(data);
     request.end(function(err, res){ 
         return callback(res);
