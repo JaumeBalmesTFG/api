@@ -20,7 +20,7 @@ describe('/Login', function () {
 
     this.beforeAll(async function () {
         await User.deleteMany({});
-        request.auth('/register', hooks.user, function (res) {});
+        request.auth('/register', hooks.user).then();
     });
 
     // Test Cases
@@ -28,24 +28,24 @@ describe('/Login', function () {
         request.auth('/login', {
             email: hooks.user.email,
             password: hooks.user.password
-        }, function (res) {
+        }).then(function(res){
             expect(res.status).to.equal(202);
             done();
-        })
+        });
     });
 
     it('[2]- Empty Schema', function (done) {
-        request.auth('/login', {}, function (res) {
+        request.auth('/login', {}).then(function(res){
             expect(res.status).to.equal(406);
             done();
-        })
+        });
     });
 
     it('[3]- Invalid Login', function (done) {
         request.auth('/login', {
             email: '123@123.com',
             password: hooks.user.password
-        }, function (res) {
+        }).then(function(res){
             expect(res.status).to.equal(409);
             done();
         })
@@ -56,9 +56,9 @@ describe('/Login', function () {
             firstName: hooks.user.firstName,
             email: hooks.user.email,
             password: hooks.user.password,
-        }, function (res) {
+        }).then(function(res){
             expect(res.status).to.equal(406);
             done();
-        })
+        });
     });
 });

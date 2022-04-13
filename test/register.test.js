@@ -25,17 +25,17 @@ describe('/Register', function () {
 
     // Test Cases
     it('[1]- Register', function (done) {
-        request.auth('/register', hooks.user, function (res) {
+        request.auth('/register', hooks.user).then(function(res){
             expect(res.status).to.equal(201);
             done();
-        })
+        });
     });
 
     it('[2]- Invalid Schema', function (done) {
-        request.auth('/register', {}, function (res) {
+        request.auth('/register', {}).then(function(res){
             expect(res.status).to.equal(406);
             done();
-        })
+        });
     });
 
     it('[3]- Invalid Password Pattern', function (done) {
@@ -44,10 +44,10 @@ describe('/Register', function () {
             lastName: hooks.user.lastName,
             email: hooks.user.email,
             password: "abcdef1"
-        }, function (res) {
+        }).then(function(res){
             expect(res.status).to.equal(406);
             done();
-        })
+        });
     });
 
     it('[4]- Invalid Email Pattern', function (done) {
@@ -56,10 +56,10 @@ describe('/Register', function () {
             lastName: hooks.user.lastName,
             email: 'abcdef',
             password: hooks.user.password
-        }, function (res) {
+        }).then(function(res){
             expect(res.status).to.equal(406);
             done();
-        })
+        });
     });
 
     it('[4]- Invalid First Name Pattern', function (done) {
@@ -68,10 +68,10 @@ describe('/Register', function () {
             lastName: hooks.user.lastName,
             email: hooks.user.email,
             password: hooks.user.password
-        }, function (res) {
+        }).then(function(res){
             expect(res.status).to.equal(406);
             done();
-        })
+        });
     });
 
     it('[5]- Invalid Last Name Pattern', function (done) {
@@ -80,9 +80,9 @@ describe('/Register', function () {
             lastName: "abc123",
             email: hooks.user.email,
             password: hooks.user.password
-        }, function (res) {
+        }).then(function(res){
             expect(res.status).to.equal(406);
             done();
-        })
+        });
     });
 });

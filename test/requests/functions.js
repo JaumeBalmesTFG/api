@@ -8,11 +8,13 @@ const server = require('../../server');
 // Middleware
 chai.use(chaiHttp);
 
-function foo(value){  }
+exports.auth = function (url, data, callback) {
+    return chai.request(server).post(url).send(data);
+}
 
-exports.auth = function(url, data, callback){
-    const request = chai.request(server).post(url).send(data);
-    request.end(function(err, res){ 
-        return callback(res);
-    });
+exports.module = function (url, token, data) {
+    return chai.request(server)
+        .post(url)
+        .set({ "Authorization": `Bearer ${token}` })
+        .send(data);
 }
