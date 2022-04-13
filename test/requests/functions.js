@@ -12,8 +12,8 @@ exports.auth = function (url, data, callback) {
     return chai.request(server).post(url).send(data);
 }
 
-exports.post = async function (url, token, data) {
-    return await chai.request(server)
+exports.post = function (url, token, data) {
+    return  chai.request(server)
         .post(url)
         .set({ "Authorization": `Bearer ${token}` })
         .send(data);

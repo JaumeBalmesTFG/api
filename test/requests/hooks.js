@@ -11,4 +11,10 @@ module.exports = {
         name: "Test Module",
         color: "#00000F"
     },
+
+    uf: {
+        name: "Test UF",
+        hours: 100,
+        truancy_percentage: 20,
+    }
 }
