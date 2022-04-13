@@ -28,14 +28,14 @@ describe('/Register', function () {
         request.auth('/register', hooks.user).then(function(res){
             expect(res.status).to.equal(201);
             done();
-        });
+        }).catch(function(err){ done(err); });
     });
 
     it('[2]- Invalid Schema', function (done) {
         request.auth('/register', {}).then(function(res){
             expect(res.status).to.equal(406);
             done();
-        });
+        }).catch(function(err){ done(err); });
     });
 
     it('[3]- Invalid Password Pattern', function (done) {
@@ -47,7 +47,7 @@ describe('/Register', function () {
         }).then(function(res){
             expect(res.status).to.equal(406);
             done();
-        });
+        }).catch(function(err){ done(err); });
     });
 
     it('[4]- Invalid Email Pattern', function (done) {
@@ -59,7 +59,7 @@ describe('/Register', function () {
         }).then(function(res){
             expect(res.status).to.equal(406);
             done();
-        });
+        }).catch(function(err){ done(err); });
     });
 
     it('[4]- Invalid First Name Pattern', function (done) {
@@ -71,7 +71,7 @@ describe('/Register', function () {
         }).then(function(res){
             expect(res.status).to.equal(406);
             done();
-        });
+        }).catch(function(err){ done(err); });
     });
 
     it('[5]- Invalid Last Name Pattern', function (done) {
@@ -83,6 +83,6 @@ describe('/Register', function () {
         }).then(function(res){
             expect(res.status).to.equal(406);
             done();
-        });
+        }).catch(function(err){ done(err); });
     });
 });

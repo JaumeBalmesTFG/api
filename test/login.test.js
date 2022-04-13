@@ -31,14 +31,14 @@ describe('/Login', function () {
         }).then(function(res){
             expect(res.status).to.equal(202);
             done();
-        });
+        }).catch(function(err){ done(err); });
     });
 
     it('[2]- Empty Schema', function (done) {
         request.auth('/login', {}).then(function(res){
             expect(res.status).to.equal(406);
             done();
-        });
+        }).catch(function(err){ done(err); });
     });
 
     it('[3]- Invalid Login', function (done) {
@@ -48,7 +48,7 @@ describe('/Login', function () {
         }).then(function(res){
             expect(res.status).to.equal(409);
             done();
-        })
+        }).catch(function(err){ done(err); });
     });
 
     it('[4]- Invalid Fields', function (done) {
@@ -59,6 +59,6 @@ describe('/Login', function () {
         }).then(function(res){
             expect(res.status).to.equal(406);
             done();
-        });
+        }).catch(function(err){ done(err); });
     });
 });
