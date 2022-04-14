@@ -1,3 +1,4 @@
+
 // Testing Hooks
 module.exports = {
     user: {
@@ -16,5 +17,11 @@ module.exports = {
         name: "Test UF",
         hours: 100,
         truancy_percentage: 20,
+    },
+
+    truancy: {
+        date: "2022-04-07T00:14:29.092Z",
+        reason: "Doctor's Appointment",
+        hours: 1,
     }
 }
