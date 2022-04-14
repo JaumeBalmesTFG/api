@@ -100,8 +100,8 @@ describe('/Truancy', function () {
     });
 
     it('[7]- Get Truancy After Delete', function (done) {
-        request.get(`/truancy/${truancyId}`, token, {}).then(function (res) {
-            expect(res.status).to.equal(200);
+        request.delete(`/truancy/${truancyId}/delete`, token, {}).then(function (res) {
+            expect(res.status).to.equal(404);
             done();
         }).catch(function (err) { done(err); });
     });
