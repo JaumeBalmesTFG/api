@@ -60,18 +60,6 @@ let taskSchema = Joi.object({
         }),
 });
 
-const extendTaskSchema = taskSchema.keys({
-    authorId: Joi.string()
-        .pattern(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i)
-        .min(1)
-        .required()
-        .messages({
-            "string.base": `"authorId" should be a type of 'text'`,
-            "string.empty": `"authorId" cannot be an empty field`,
-            "any.required": `"authorId" is a required field`
-        }),
-})
-
 exports.validateTaskSchema = async function (req, res, next) {
     await taskSchema.validateAsync(req.body)
         .then(function () { return next(); })
@@ -84,18 +72,4 @@ exports.validateTaskSchema = async function (req, res, next) {
                 body: req.body
             });
         });
-}
-
-exports.validateExtendedTaskSchema = async function (req, res, next) {
-    await extendTaskSchema.validateAsync(req.body)
-        .then(function () { return next(); })
-        .catch(function (err) {
-            return res.status(HttpStatusCode.NOT_ACCEPTABLE).send({
-                error: err.details[0].message,
-                message: HttpStatusMessage.NOT_ACCEPTABLE,
-                path: req.path,
-                method: req.method,
-                body: req.body
-            });
-        });
-}
+};

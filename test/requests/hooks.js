@@ -23,5 +23,12 @@ module.exports = {
         date: "2022-04-07T00:14:29.092Z",
         reason: "Doctor's Appointment",
         hours: 1,
+    },
+
+    task: {
+        name: "Java Task",
+        grade: 5,
+        description: "Java OOP Task",
+        dueDate: "2022-05-04",
     }
 }

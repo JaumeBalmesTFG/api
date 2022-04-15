@@ -15,9 +15,9 @@ const { validateUfExistsAndIsFromRequestUser } = require('../../middlewares/chec
 router.use(isAuthenticated);
 
 // Routes
-router.post("/", validateTaskSchema, validateUfExistsAndIsFromRequestUser, create);
-router.put("/:task_id", validateExtendedTaskSchema, update);
-router.delete("/:task_id", remove);
+router.post("/create", validateTaskSchema, validateUfExistsAndIsFromRequestUser, create);
+router.put("/:task_id/edit", validateTaskSchema, validateUfExistsAndIsFromRequestUser, update);
+router.delete("/:task_id/delete", remove);
 router.get("/:task_id", get);
 
 module.exports = router;

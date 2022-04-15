@@ -46,8 +46,8 @@ exports.create = async function (req, res, next) {
             });
         }
 
-        return res.status(HttpStatusCode.OK).send({
-            message: HttpStatusMessage.OK,
+        return res.status(HttpStatusCode.CREATED).send({
+            message: HttpStatusMessage.CREATED,
             path: req.originalUrl,
             method: req.method,
             body: doc,
