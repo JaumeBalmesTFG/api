@@ -16,6 +16,8 @@ const {
 // Create Module
 exports.create = async function (req, res, next) {
 
+    console.log("entry");
+
     const { name, color } = req.body;
 
     const match = await Module.findOne({
