@@ -30,5 +30,10 @@ module.exports = {
         grade: 5,
         description: "Java OOP Task",
         dueDate: "2022-05-04",
+    },
+
+    rule: {
+        title: "Examenes",
+        percentage: "80"
     }
 }

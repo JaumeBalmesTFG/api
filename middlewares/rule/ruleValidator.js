@@ -1,4 +1,4 @@
-// Create and Update Truancy Schema Validator
+// Create and Update Rule Schema Validator
 
 const Joi = require('joi');
 
@@ -8,7 +8,7 @@ const {
     HttpStatusMessage
 } = require('../../config/status-codes');
 
-let truancySchema = Joi.object({
+let ruleSchema = Joi.object({
     ufId: Joi.string()
         .pattern(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i)
         .min(1)
@@ -20,26 +20,26 @@ let truancySchema = Joi.object({
             "any.required": `"ufId" is a required field`
         }),
 
-    date: Joi.date()
+    title: Joi.string()
         .required()
         .messages({
-            "date.empty": `"Date" cannot be an empty field`,
-            "date.required": `"Date" is a required field`
+            "string.base": `"Title" should be a type of '#boolean'`,
+            "string.empty": `"Title" cannot be an empty field`,
+            "string.min": `"Title" should have a minimum length of {#limit}`,
+            "string.max": `"Title" should have a maximum length of {#limit}`,
+            "any.required": `"Title" is a required field`
         }),
 
-    reason: Joi.string()
-        .messages({}),
-
-    hours: Joi.number()
+    percentage: Joi.number()
         .required()
         .messages({
-            "number.empty": `"Hours" cannot be an empty field`,
-            "number.required": `"Hours" is a required field`
+            "date.empty": `"Percentage" cannot be an empty field`,
+            "date.required": `"Percentage" is a required field`
         })
 });
 
-exports.validateTruancySchema = async function (req, res, next) {
-    await truancySchema.validateAsync(req.body)
+exports.validateRuleSchema = async function (req, res, next) {
+    await ruleSchema.validateAsync(req.body)
         .then(function () { return next(); })
         .catch(function (err) {
             return res.status(HttpStatusCode.NOT_ACCEPTABLE).send({
