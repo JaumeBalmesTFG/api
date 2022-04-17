@@ -57,23 +57,15 @@ describe('/Module', function () {
         }).catch(function(err){ done(err); });
     });
 
-    it('[4]- Archive Module', function (done) {
-        request.edit(`/module/${module_id}/archive`, token, { archived: true }).then(function(res){
-            expect(res.body.body.archived).to.equal(true);
-            expect(res.status).to.equal(200);
-            done();
-        
-        }).catch(function(err){ done(err); });
-    });
 
-    it('[5]- Get Module', function(done){
+    it('[4]- Get Module', function(done){
         request.get(`/module/${module_id}`, token).then(function(res){
             expect(res.status).to.equal(200);
             done();
         }).catch(function(err){ done(err); });
     });
 
-    it('[6]- Update Module', function(done){
+    it('[5]- Update Module', function(done){
         request.edit(`/module/${module_id}`, token, {
             name: "Edited",
             color: hooks.module.color
@@ -84,7 +76,7 @@ describe('/Module', function () {
         }).catch(function(err){ done(err); });
     });
 
-    it('[7]- Invalid Update Module', function(done){
+    it('[6]- Invalid Update Module', function(done){
         request.edit(`/module/${module_id}`, token, {
             name: "",
             color: hooks.module.color
@@ -93,4 +85,22 @@ describe('/Module', function () {
             done();
         }).catch(function(err){ done(err); });
     });
+
+    it('[7]- Archive Module', function (done) {
+        request.edit(`/module/${module_id}/archive`, token, { archived: true }).then(function(res){
+            expect(res.body.body.archived).to.equal(true);
+            expect(res.status).to.equal(200);
+            done();
+
+        }).catch(function(err){ done(err); });
+    });
+
+    it('[8]- Get Archived Modules', function(done){
+        request.get(`/module/all/archived`, token).then(function(res){
+            expect(res.status).to.equal(200);
+            done();
+        }).catch(function(err){ done(err); });
+    });
+
+
 });
