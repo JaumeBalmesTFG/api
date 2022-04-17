@@ -1,5 +1,7 @@
 // Uf Model
 const Uf = require('../../models/uf/Uf');
+const Rule = require('../../models/rule/Rule');
+const Truancy = require('../../models/truancy/Truancy');
 
 // Status Messages
 const {
@@ -64,11 +66,40 @@ exports.get = async function (req, res, next) {
             });
         }
 
-        return res.status(HttpStatusCode.OK).send({
-            message: HttpStatusMessage.OK,
-            path: req.originalUrl,
-            method: req.method,
-            body: doc,
+        Rule.find({ uf_id: req.params.uf_id }, function (err, rules) {
+            if (err) {
+                return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
+                    message: ResponseMessage.DATABASE_ERROR,
+                    path: req.originalUrl,
+                    method: req.method,
+                    body: rules,
+                });
+            }
+            Truancy.find({ uf_id: req.params.uf_id }, function (err, truancies) {
+
+                if (err) {
+                    return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
+                        message: ResponseMessage.DATABASE_ERROR,
+                        path: req.originalUrl,
+                        method: req.method,
+                        body: truancies,
+                    });
+                }
+
+                let total_hours_left = 0;
+                for (let i = 0; i < truancies.length; i++) {
+                    total_hours_left += truancies[i].hours;
+                }
+                doc.total_hours_left = total_hours_left;
+                let result = {doc, rules};
+                return res.status(HttpStatusCode.OK).json({
+                    message: HttpStatusMessage.OK,
+                    path: req.originalUrl,
+                    method: req.method,
+                    body: result,
+                });
+            });
+
         });
     });
 }
