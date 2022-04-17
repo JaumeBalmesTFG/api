@@ -6,7 +6,8 @@ const {
     create,
     update,
     get,
-    archive
+    archive,
+    getAllArchived
 } = require('../../controllers/module/moduleController');
 
 // Middlewares
@@ -23,14 +24,11 @@ router.post("/", validateModuleSchema, create);
 router.put("/:module_id", [validateModuleSchema, validateModuleExistsAndIsFromRequestUser], update)
 router.put("/:module_id/archive", validateModuleArchivedSchema, archive);
 router.get("/:module_id", validateModuleExistsAndIsFromRequestUser, get);
+router.get("/all/archived", getAllArchived);
 
 /**
  * Data retrievers
  */
-router.get("/all/archived", function (req, res) {
-    //Return all modules that are archived by the user
-    //If there are no modules archived, return message and code
-});
 
 router.get("/all/ufs", function (req, res) {
     //Return all modules with their ufs inside

@@ -90,6 +90,28 @@ exports.get = async function (req, res, next) {
     });
 }
 
+// Get All Modules
+exports.getAllArchived = async function (req, res, next) {
+
+    Module.find({ authorId: res.locals.authUserId, archived: true }, function (err, doc) {
+        if (err) {
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
+                message: ResponseMessage.DATABASE_ERROR,
+                path: req.originalUrl,
+                method: req.method,
+                body: doc,
+            });
+        }
+
+        return res.status(HttpStatusCode.OK).send({
+            message: HttpStatusMessage.OK,
+            path: req.originalUrl,
+            method: req.method,
+            body: doc,
+        });
+    });
+}
+
 // Update Module
 exports.update = async function (req, res, next) {
 
