@@ -21,7 +21,7 @@ router.use(isAuthenticated);
  */
 router.post("/", validateModuleSchema, create);
 router.put("/:module_id", [validateModuleSchema, validateModuleExistsAndIsFromRequestUser], update)
-router.put("/:module_id/archive", validateModuleArchivedSchema, archive);
+router.put("/:module_id/archive", [validateModuleArchivedSchema, validateModuleExistsAndIsFromRequestUser], archive);
 router.get("/:module_id", validateModuleExistsAndIsFromRequestUser, get);
 
 /**
