@@ -16,8 +16,6 @@ const {
 // Create Module
 exports.create = async function (req, res, next) {
 
-    console.log("entry");
-
     const { name, color } = req.body;
 
     const match = await Module.findOne({
@@ -37,7 +35,8 @@ exports.create = async function (req, res, next) {
     const newModule = new Module({
         authorId: res.locals.authUserId,
         name: name,
-        color: color
+        color: color,
+        archived: false
     });
 
     await newModule.save(function (err, doc) {
@@ -92,8 +91,7 @@ exports.get = async function (req, res, next) {
 
 // Get All Modules
 exports.getAllArchived = async function (req, res, next) {
-
-    Module.find({ authorId: res.locals.authUserId, archived: true }, function (err, doc) {
+    Module.find({ authorId: res.locals.authUserId }, function (err, doc) {
         if (err) {
             return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
                 message: ResponseMessage.DATABASE_ERROR,
