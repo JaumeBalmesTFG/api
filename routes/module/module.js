@@ -12,7 +12,7 @@ const {
 // Middlewares
 const { isAuthenticated } = require('../../middlewares/auth/authentication');
 const { validateModuleSchema, validateModuleArchivedSchema } = require('../../middlewares/module/moduleValidator');
-
+const { validateModuleExistsAndIsFromRequestUser } = require ('../../middlewares/checker/module/moduleChecker')
 // Auth
 router.use(isAuthenticated);
 
@@ -20,9 +20,9 @@ router.use(isAuthenticated);
  * CRUD
  */
 router.post("/", validateModuleSchema, create);
-router.put("/:module_id", validateModuleSchema, update)
+router.put("/:module_id", [validateModuleSchema, validateModuleExistsAndIsFromRequestUser], update)
 router.put("/:module_id/archive", validateModuleArchivedSchema, archive);
-router.get("/:module_id", get);
+router.get("/:module_id", validateModuleExistsAndIsFromRequestUser, get);
 
 /**
  * Data retrievers
