@@ -27,7 +27,7 @@ exports.create = async function (req, res, next) {
     }
 
     const newTask = new Task({
-        authorId: req.authUserId,
+        authorId: res.locals.authUserId,
         ufId: ufId,
         name: name,
         grade: grade,
@@ -59,7 +59,7 @@ exports.update = async function (req, res, next) {
 
     const body = req.body;
 
-    Task.findOneAndUpdate({ _id: req.params.task_id, authorId: req.authUserId, ufId: req.body.ufId },
+    Task.findOneAndUpdate({ _id: req.params.task_id, authorId: res.locals.authUserId, ufId: req.body.ufId },
         {
             name: body.name,
             grade: body.grade,
@@ -90,7 +90,7 @@ exports.update = async function (req, res, next) {
 }
 
 exports.remove = async function (req, res, next) {
-    Task.findOneAndDelete({ _id: req.params.task_id, authorId: req.authUserId }, function (err, doc) {
+    Task.findOneAndDelete({ _id: req.params.task_id, authorId: res.locals.authUserId }, function (err, doc) {
         if (err || !doc) {
             return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
                 error: ResponseMessage.DATABASE_ERROR,
@@ -108,7 +108,7 @@ exports.remove = async function (req, res, next) {
 }
 
 exports.get = async function (req, res, next) {
-    Task.findOne({ _id: req.params.task_id, authorId: req.authUserId }, function (err, doc) {
+    Task.findOne({ _id: req.params.task_id, authorId: res.locals.authUserId }, function (err, doc) {
         if (err || !doc) {
             console.log(err);
             return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({

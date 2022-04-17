@@ -10,13 +10,13 @@ const { validateTaskSchema, validateExtendedTaskSchema } = require('../../middle
 
 
 // Checkers
-const { validateUfExistsAndIsFromRequestUser } = require('../../middlewares/checker/uf/ufChecker');
+const { validateModuleFromUfExistsAndIsFromRequestUser } = require('../../middlewares/checker/uf/ufChecker');
 
 router.use(isAuthenticated);
 
 // Routes
-router.post("/create", validateTaskSchema, validateUfExistsAndIsFromRequestUser, create);
-router.put("/:task_id/edit", validateTaskSchema, validateUfExistsAndIsFromRequestUser, update);
+router.post("/create", validateTaskSchema, validateModuleFromUfExistsAndIsFromRequestUser, create);
+router.put("/:task_id/edit", validateTaskSchema, validateModuleFromUfExistsAndIsFromRequestUser, update);
 router.delete("/:task_id/delete", remove);
 router.get("/:task_id", get);
 
