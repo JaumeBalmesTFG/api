@@ -91,7 +91,7 @@ exports.get = async function (req, res, next) {
 
 // Get All Modules
 exports.getAllArchived = async function (req, res, next) {
-    Module.find({ authorId: res.locals.authUserId }, function (err, doc) {
+    Module.find({ authorId: res.locals.authUserId, archived: true }, function (err, doc) {
         if (err) {
             return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
                 message: ResponseMessage.DATABASE_ERROR,
