@@ -13,7 +13,7 @@ const {
 // Create
 exports.create = async function (req, res, next) {
 
-    const { ufId, name, grade, description, dueDate } = req.body;
+    const { ufId, ruleId, name, grade, description, dueDate } = req.body;
 
     const matchUf = await Uf.findOne({ _id: ufId, authorId: req.authorId });
 
@@ -29,6 +29,7 @@ exports.create = async function (req, res, next) {
     const newTask = new Task({
         authorId: req.authUserId,
         ufId: ufId,
+        ruleId: ruleId,
         name: name,
         grade: grade,
         description: description,

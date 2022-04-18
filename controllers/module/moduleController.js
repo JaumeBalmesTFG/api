@@ -190,4 +190,8 @@ exports.archive = async function (req, res, next) {
             body: doc,
         });
     })
-}
+};
+
+exports.getAll = async function(req, res, next){
+    return res.send("hi");
+};
