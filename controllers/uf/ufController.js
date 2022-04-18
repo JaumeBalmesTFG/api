@@ -2,12 +2,15 @@
 const Uf = require('../../models/uf/Uf');
 const Rule = require('../../models/rule/Rule');
 const Truancy = require('../../models/truancy/Truancy');
+const Task = require('../../models/task/Task');
+
 
 // Status Messages
 const {
     HttpStatusCode,
     ResponseMessage, HttpStatusMessage
 } = require('../../config/status-codes');
+const {checkPathObjectId} = require("../../services/checker");
 
 // Create Uf
 exports.create = async function (req, res, next) {
@@ -139,6 +142,83 @@ exports.update = async function (req, res, next) {
             path: req.originalUrl,
             method: req.method,
             body: obj,
+        });
+    });
+}
+
+// Delete Uf
+exports.remove = async function (req, res, next) {
+
+    if (!checkPathObjectId(req.params.uf_id)) {
+        return res.status(HttpStatusCode.BAD_REQUEST).send({
+            message: HttpStatusMessage.BAD_REQUEST,
+            path: req.originalUrl,
+            method: req.method,
+            body: req.body
+        });
+    }
+
+    const match = await Uf.findOne({_id: req.params.uf_id});
+
+    if (!match) {
+        return res.status(HttpStatusCode.NOT_FOUND).send({
+            message: HttpStatusMessage.NOT_FOUND,
+            path: req.originalUrl,
+            method: req.method,
+            body: req.body
+        });
+    }
+
+    Truancy.find({ uf_id: req.params.uf_id }, function (err, truancies) {
+
+        if (err) {
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
+                message: ResponseMessage.DATABASE_ERROR,
+                path: req.originalUrl,
+                method: req.method,
+                body: truancies,
+            });
+        }
+
+        console.log(truancies);
+
+        Task.find({ uf_id: req.params.uf_id }, function (err, tasks) {
+
+            if (err) {
+                return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
+                    message: ResponseMessage.DATABASE_ERROR,
+                    path: req.originalUrl,
+                    method: req.method,
+                    body: truancies,
+                });
+            }
+
+            console.log(tasks);
+
+
+        });
+
+        return res.send("holaa");
+
+    });
+
+
+
+    await match.delete(function (err, doc) {
+        if (err) {
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
+                error: ResponseMessage.DATABASE_ERROR,
+                path: req.originalUrl,
+                method: req.method,
+                body: req.body
+            });
+        }
+
+        return res.status(HttpStatusCode.OK).send({
+            message: HttpStatusMessage.OK,
+            path: req.originalUrl,
+            method: req.method,
+            body: doc,
         });
     });
 }
