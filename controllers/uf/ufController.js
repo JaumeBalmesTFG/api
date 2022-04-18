@@ -169,50 +169,59 @@ exports.remove = async function (req, res, next) {
         });
     }
 
-    Truancy.find({ uf_id: req.params.uf_id }, function (err, truancies) {
+    Truancy.find({ ufId: req.params.uf_id }, function (err, truancies) {
 
-        if (err) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
-                message: ResponseMessage.DATABASE_ERROR,
+        if (truancies.length > 0) {
+            return res.status(HttpStatusCode.CONFLICT).send({
+                message: ResponseMessage.REMOVE_TRUANCIES_BEFORE_REMOVING_UF,
                 path: req.originalUrl,
                 method: req.method,
                 body: truancies,
             });
         }
 
-        console.log(truancies);
+        Task.find({ ufId: req.params.uf_id }, function (err, tasks) {
 
-        Task.find({ uf_id: req.params.uf_id }, function (err, tasks) {
-
-            if (err) {
-                return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
-                    message: ResponseMessage.DATABASE_ERROR,
+            if (tasks.length > 0) {
+                return res.status(HttpStatusCode.CONFLICT).send({
+                    message: ResponseMessage.REMOVE_TASKS_BEFORE_REMOVING_UF,
                     path: req.originalUrl,
                     method: req.method,
-                    body: truancies,
+                    body: tasks,
                 });
             }
 
-            console.log(tasks);
+            Rule.find({ ufId: req.params.uf_id }, function (err, rules) {
 
+                if (rules.length > 0) {
+                    for (let i = 0; i < rules.length; i++) {
+                        rules[i].delete();
+                    }
+                }
 
+                match.delete(function(err, doc){
+                    if (err) {
+                        return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
+                            error: ResponseMessage.DATABASE_ERROR,
+                            path: req.originalUrl,
+                            method: req.method,
+                            body: req.body
+                        });
+                    }
+                    return res.status(HttpStatusCode.OK).send({
+                        message: HttpStatusMessage.OK,
+                        path: req.originalUrl,
+                        method: req.method,
+                        body: doc,
+                    });
+                })
+            });
         });
-
-        return res.send("holaa");
-
     });
 
 
 
-    await match.delete(function (err, doc) {
-        if (err) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
-                error: ResponseMessage.DATABASE_ERROR,
-                path: req.originalUrl,
-                method: req.method,
-                body: req.body
-            });
-        }
+    /*
 
         return res.status(HttpStatusCode.OK).send({
             message: HttpStatusMessage.OK,
@@ -220,5 +229,5 @@ exports.remove = async function (req, res, next) {
             method: req.method,
             body: doc,
         });
-    });
+    });*/
 }
