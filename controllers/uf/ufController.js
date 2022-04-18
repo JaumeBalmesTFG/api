@@ -86,11 +86,14 @@ exports.get = async function (req, res, next) {
                     });
                 }
 
-                let total_hours_left = 0;
+                let totalHoursLeft;
+                let truanciesMade = 0;
                 for (let i = 0; i < truancies.length; i++) {
-                    total_hours_left += truancies[i].hours;
+                    truanciesMade += truancies[i].hours;
                 }
-                doc.total_hours_left = total_hours_left;
+
+                totalHoursLeft = ((parseInt(doc.hours) * parseInt(doc.truancy_percentage)) / 100) - truanciesMade;
+                doc.total_hours_left = totalHoursLeft;
                 let result = {doc, rules};
                 return res.status(HttpStatusCode.OK).json({
                     message: HttpStatusMessage.OK,
