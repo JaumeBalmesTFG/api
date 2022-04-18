@@ -7,7 +7,7 @@ const {
     update,
     get,
     archive,
-    getAllArchived
+    getAllArchived, getAllUfsFromModules
 } = require('../../controllers/module/moduleController');
 
 // Middlewares
@@ -25,6 +25,7 @@ router.put("/:module_id", [validateModuleSchema, validateModuleExistsAndIsFromRe
 router.put("/:module_id/archive", [validateModuleArchivedSchema, validateModuleExistsAndIsFromRequestUser], archive);
 router.get("/:module_id", validateModuleExistsAndIsFromRequestUser, get);
 router.get("/all/archived", getAllArchived);
+router.get("/all/ufs", getAllUfsFromModules);
 
 /**
  * Data retrievers
