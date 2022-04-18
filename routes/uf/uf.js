@@ -5,7 +5,8 @@ const router = express.Router();
 const {
     create,
     update,
-    get
+    get,
+    remove
 } = require('../../controllers/uf/ufController');
 
 // Middlewares
@@ -23,5 +24,6 @@ router.use(isAuthenticated);
 router.post("/create", [validateUfSchema, validateModuleExistsAndIsFromRequestUser], create);
 router.get("/:uf_id", validateModuleFromUfExistsAndIsFromRequestUser, get);
 router.put("/:uf_id/edit", [validateUfSchema, validateModuleExistsAndIsFromRequestUser, validateModuleFromUfExistsAndIsFromRequestUser], update);
+router.delete("/:uf_id/delete", validateModuleFromUfExistsAndIsFromRequestUser, remove);
 
 module.exports = router;
