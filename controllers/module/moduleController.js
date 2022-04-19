@@ -1,5 +1,7 @@
 // Module Model
 const Module = require('../../models/module/Module');
+const Uf = require('../../models/uf/Uf');
+const Task = require('../../models/task/Task');
 
 // Status Messages
 const {
@@ -15,8 +17,6 @@ const {
 
 // Create Module
 exports.create = async function (req, res, next) {
-
-    console.log("entry");
 
     const { name, color } = req.body;
 
@@ -193,5 +193,26 @@ exports.archive = async function (req, res, next) {
 };
 
 exports.getAll = async function(req, res, next){
-    return res.send("hi");
+
+    // Get modules
+    var modules = await Module.find({ authorId: req.authUserId }).lean();
+
+    // Save Modules Promises
+    var ufPromises = modules.map(async function(m, i){
+        m.ufs = await Uf.find({ moduleId: m._id,  authorId: req.authUserId }).lean();
+        
+        var taskPromises = m.ufs.map(async function (uf, i) { 
+            uf.tasks = await Task.find({ ufId: uf._id, authorId: req.authUserId }); 
+            return uf;
+        });
+        
+        m.ufs = await Promise.all(taskPromises).then(function(res){ return res; });
+
+        return m;
+    });
+
+    // Get Promises
+    modules = await Promise.all(ufPromises).then(function(res){ return res; });
+
+    return res.send(modules);
 };
