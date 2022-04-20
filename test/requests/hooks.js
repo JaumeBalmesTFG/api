@@ -12,6 +12,10 @@ module.exports = {
         name: "Test Module",
         color: "#00000F"
     },
+    secondModule: {
+        name:"Second Module",
+        color: "#F3F3F3"
+    },
 
     uf: {
         name: "Test UF",

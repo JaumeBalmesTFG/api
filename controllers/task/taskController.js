@@ -37,7 +37,6 @@ exports.create = async function (req, res, next) {
 
     newTask.save(function (err, doc) {
         if (err) {
-            console.log(err);
             return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
                 error: ResponseMessage.DATABASE_ERROR,
                 path: req.originalUrl,
@@ -70,7 +69,6 @@ exports.update = async function (req, res, next) {
         function (err, doc) {
 
             if (err) {
-                console.log(err);
                 return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
                     error: ResponseMessage.DATABASE_ERROR,
                     path: req.originalUrl,
@@ -110,7 +108,6 @@ exports.remove = async function (req, res, next) {
 exports.get = async function (req, res, next) {
     Task.findOne({ _id: req.params.task_id, authorId: res.locals.authUserId }, function (err, doc) {
         if (err || !doc) {
-            console.log(err);
             return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
                 error: ResponseMessage.DATABASE_ERROR,
                 path: req.originalUrl,

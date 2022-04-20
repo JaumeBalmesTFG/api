@@ -112,7 +112,6 @@ describe('/Task', function () {
 
     it('[7]- Delete Non Existent Task', function (done) {
         request.delete(`/task/${taskId}/delete`, token, {}).then(function (res) {
-            console.log(res.body);
             expect(res.status).to.equal(500);
             done();
         }).catch(function (err) { done(err); });
