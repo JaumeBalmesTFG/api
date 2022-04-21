@@ -180,9 +180,22 @@ exports.archive = async function (req, res, next) {
                 body: req.body
             });
         }
-    })
 
-    Uf.updateMany({ moduleId: match._id }, {archived: req.body.archived}, function(err, doc){
-        return res.send(doc);
+        Uf.updateMany({ moduleId: match._id }, {archived: req.body.archived}, function(err, doc){
+            if (err) {
+                return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
+                    error: ResponseMessage.DATABASE_ERROR,
+                    path: req.originalUrl,
+                    method: req.method,
+                    body: req.body
+                });
+            }
+        });
+
+        return res.status(HttpStatusCode.OK).send({
+            path: req.originalUrl,
+            method: req.method,
+            body: req.body
+        });
     });
 }
