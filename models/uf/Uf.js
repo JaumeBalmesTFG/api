@@ -27,6 +27,11 @@ const ufSchema = new Schema({
         default: 0,
     },
 
+    archived: {
+        type: Boolean,
+        default: false
+    },
+
     total_hours_left: {
         type: Number,
     }

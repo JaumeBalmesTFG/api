@@ -1,5 +1,6 @@
 // Module Model
 const Module = require('../../models/module/Module');
+const Uf = require('../../models/uf/Uf');
 
 // Status Messages
 const {
@@ -15,9 +16,6 @@ const {
 
 // Create Module
 exports.create = async function (req, res, next) {
-
-    console.log("entry");
-
     const { name, color } = req.body;
 
     const match = await Module.findOne({
@@ -173,7 +171,7 @@ exports.archive = async function (req, res, next) {
 
     match.archived = req.body.archived;
 
-    await match.save(function(err, doc){
+    match.save(function(err, doc){
         if (err) {
             return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
                 error: ResponseMessage.DATABASE_ERROR,
@@ -182,12 +180,9 @@ exports.archive = async function (req, res, next) {
                 body: req.body
             });
         }
-
-        return res.status(HttpStatusCode.OK).send({
-            message: HttpStatusMessage.OK,
-            path: req.originalUrl,
-            method: req.method,
-            body: doc,
-        });
     })
+
+    Uf.updateMany({ moduleId: match._id }, {archived: req.body.archived}, function(err, doc){
+        return res.send(doc);
+    });
 }
