@@ -140,3 +140,26 @@ exports.loginController = async function (req, res) {
         });
     });
 };
+
+exports.authController = async function (req, res) {
+
+    let body = req.body;
+    const user = await User.findOne({ email: body.email });
+
+    //In case we do not have user we return register action
+    if (!user) {
+        return res.status(HttpStatusCode.OK).send({
+            message: ResponseMessage.REGISTER,
+            body: {
+                action: "register"
+            }
+        });
+    }
+    //In case we have user we return login action
+    return res.status(HttpStatusCode.OK).send({
+        message: ResponseMessage.LOGIN,
+        body: {
+            action: "login"
+        }
+    });
+};
