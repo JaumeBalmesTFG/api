@@ -228,6 +228,9 @@ exports.getAll = async function (req, res, next) {
 
     // Calc grades
     modules.forEach(function (m) {
+
+        m.globalModuleGrade = 0;
+
         m.ufs.forEach(function (uf) {
             var grades = {};
             var calcGrade = 0;
@@ -248,13 +251,20 @@ exports.getAll = async function (req, res, next) {
 
             uf.globalUfGrade = calcGrade.toFixed(2);
 
+            m.globalModuleGrade += parseFloat(uf.globalUfGrade);
+
             // Calc Truancies
             uf.truancies.forEach(function(trn){
                 calcTruancy += trn.hours;
             });
 
             uf.totalTruancies = (100 / uf.hours) * calcTruancy;
+
+            return uf.globalUfGrade;
         });
+
+        m.globalModuleGrade = m.globalModuleGrade / m.ufs.length;
+
     });
 
     return res.send(modules);
