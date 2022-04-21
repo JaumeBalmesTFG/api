@@ -1,6 +1,6 @@
 // Module Model
 const Module = require('../../models/module/Module');
-
+const Uf = require('../../models/uf/Uf');
 // Status Messages
 const {
     HttpStatusCode,
@@ -12,6 +12,7 @@ const {
 const {
     checkPathObjectId
 } = require('../../services/checker');
+const {uf} = require("../../test/requests/hooks");
 
 // Create Module
 exports.create = async function (req, res, next) {
@@ -89,7 +90,63 @@ exports.get = async function (req, res, next) {
     });
 }
 
-// Get All Modules
+exports.getAllUfsFromModules = async function (req, res, next) {
+    let modules;
+
+    async function getModules() {
+        return Module.find({ authorId: res.locals.authUserId, archived: false }).lean();
+    }
+
+    async function getUfs(module){
+        return Uf.find({ moduleId: module._id, archived: false }).lean();
+    }
+
+    await getModules().then( function (foundModules) {
+        modules = foundModules;
+    }).catch(function(err){
+        if (err) {
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
+                message: ResponseMessage.DATABASE_ERROR,
+                path: req.originalUrl,
+                method: req.method,
+                body: modules,
+            });
+        }
+    });
+
+    if (modules.length > 0) {
+        for (let i = 0; i < modules.length; i++) {
+            await getUfs(modules[i]).then( function (ufs) {
+                modules[i]['ufs'] = ufs;
+            }).catch(function (err) {
+                if (err) {
+                    return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
+                        message: ResponseMessage.DATABASE_ERROR,
+                        path: req.originalUrl,
+                        method: req.method,
+                        body: modules,
+                    });
+                }
+            });
+        }
+
+        return res.status(HttpStatusCode.OK).send({
+            message: HttpStatusMessage.OK,
+            path: req.originalUrl,
+            method: req.method,
+            body: modules,
+        });
+    }
+
+    return res.status(HttpStatusCode.NOT_FOUND).send({
+        message: HttpStatusMessage.NOT_FOUND,
+        path: req.originalUrl,
+        method: req.method,
+        body: modules,
+    });
+}
+
+// Get All Archived Modules
 exports.getAllArchived = async function (req, res, next) {
     Module.find({ authorId: res.locals.authUserId, archived: true }, function (err, doc) {
         if (err) {
