@@ -15,6 +15,7 @@ const {
 const {
     checkPathObjectId
 } = require('../../services/checker');
+const Truancy = require('../../models/truancy/Truancy');
 
 // Create Module
 exports.create = async function (req, res, next) {
@@ -203,6 +204,9 @@ exports.getAll = async function (req, res, next) {
         m.ufs = await Uf.find({ moduleId: m._id, authorId: req.authUserId }, { createdAt: 0, updatedAt: 0, __v: 0 }).lean();
 
         var taskPromises = m.ufs.map(async function (uf, i) {
+
+            uf.truancies = await Truancy.find({ ufId: uf._id, authorId: req.authUserId }, { hours: 1 });
+
             uf.tasks = await Task.find({ ufId: uf._id, authorId: req.authUserId }, { ruleId: 1, grade: 1, name: 1 }).lean();
 
             var rulePromises = uf.tasks.map(async function (task, i) {
@@ -224,9 +228,10 @@ exports.getAll = async function (req, res, next) {
 
     // Calc grades
     modules.forEach(function (m) {
-        m.ufs.forEach(async function (uf) {
+        m.ufs.forEach(function (uf) {
             var grades = {};
-            var calc = 0;
+            var calcGrade = 0;
+            var calcTruancy = 0;
 
             uf.tasks.forEach(function (task) {
                 grades[task.rule.title] = { percentage: task.rule.percentage, grade: 0 };
@@ -238,10 +243,17 @@ exports.getAll = async function (req, res, next) {
 
             // Calc uf global grade
             Object.keys(grades).forEach(function(key) {
-                calc += ((grades[key].percentage / 100) * grades[key].grade);
+                calcGrade += ((grades[key].percentage / 100) * grades[key].grade);
             });
 
-            uf.globalUfGrade = calc.toFixed(2);
+            uf.globalUfGrade = calcGrade.toFixed(2);
+
+            // Calc Truancies
+            uf.truancies.forEach(function(trn){
+                calcTruancy += trn.hours;
+            });
+
+            uf.totalTruancies = (100 / uf.hours) * calcTruancy;
         });
     });
 
