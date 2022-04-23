@@ -68,8 +68,6 @@ exports.get = async function (req, res, next) {
 
 // Get All Rules From Uf
 exports.getAll = async function (req, res, next) {
-    console.log(req);
-
     if(!checkPathObjectId(req.params.uf_id)){
         return res.status(HttpStatusCode.BAD_REQUEST).send({
             message: HttpStatusMessage.BAD_REQUEST,

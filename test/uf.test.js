@@ -79,7 +79,7 @@ describe('/Uf', function () {
 
     it('[6]- Get Invalid UF', function (done) {
         request.get(`/uf/${uf_id + "0"}`, token, uf).then(function (res) {
-            expect(res.status).to.equal(500);
+            expect(res.status).to.equal(404);
             done();
         }).catch(function (err) { done(err); });
     });
@@ -87,7 +87,7 @@ describe('/Uf', function () {
     it('[7]- Create UF - Invalid Module', function (done) {
         uf.moduleId = "62575d1ddc2246861a6998e9";
         request.post('/uf/create', token, uf).then(function (res) {
-            expect(res.status).to.equal(500);
+            expect(res.status).to.equal(401);
             done();
         }).catch(function (err) { done(err); });
     });

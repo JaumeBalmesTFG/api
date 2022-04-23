@@ -17,7 +17,7 @@ const moduleSchema = new Schema({
     percentage: {
         type: Number,
         required: true,
-    },
+    }
 }, { timestamps: true });
 
 // Exports

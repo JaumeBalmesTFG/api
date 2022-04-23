@@ -6,6 +6,7 @@ const expect = require('chai').expect;
 // User Model
 const User = require('../models/auth/User');
 const Module = require('../models/module/Module');
+const Uf = require('../models/uf/Uf');
 
 // Custom Requests
 const request = require('./requests/functions');
@@ -22,6 +23,7 @@ describe('/Module', function () {
     // Data
     let module_id;
     let token;
+    let uf = { moduleId: null, ...hooks.uf };
 
     this.beforeAll(async function(){
         await request.auth('/register', hooks.user).then(function(res){
@@ -55,23 +57,15 @@ describe('/Module', function () {
         }).catch(function(err){ done(err); });
     });
 
-    it('[4]- Archive Module', function (done) {
-        request.edit(`/module/${module_id}/archive`, token, { archived: true }).then(function(res){
-            expect(res.body.body.archived).to.equal(true);
-            expect(res.status).to.equal(200);
-            done();
-        
-        }).catch(function(err){ done(err); });
-    });
 
-    it('[5]- Get Module', function(done){
+    it('[4]- Get Module', function(done){
         request.get(`/module/${module_id}`, token).then(function(res){
             expect(res.status).to.equal(200);
             done();
         }).catch(function(err){ done(err); });
     });
 
-    it('[6]- Update Module', function(done){
+    it('[5]- Update Module', function(done){
         request.edit(`/module/${module_id}`, token, {
             name: "Edited",
             color: hooks.module.color
@@ -82,7 +76,7 @@ describe('/Module', function () {
         }).catch(function(err){ done(err); });
     });
 
-    it('[7]- Invalid Update Module', function(done){
+    it('[6]- Invalid Update Module', function(done){
         request.edit(`/module/${module_id}`, token, {
             name: "",
             color: hooks.module.color
@@ -92,5 +86,28 @@ describe('/Module', function () {
         }).catch(function(err){ done(err); });
     });
 
-    
+    it('[7]- Archive Module', function (done) {
+        request.edit(`/module/${module_id}/archive`, token, { archived: true }).then(function(res){
+            expect(res.body.body.archived).to.equal(true);
+            expect(res.status).to.equal(200);
+            done();
+
+        }).catch(function(err){ done(err); });
+    });
+
+    it('[8]- Get Archived Modules', function(done){
+        request.get(`/module/all/archived`, token).then(function(res){
+            expect(res.status).to.equal(200);
+            done();
+        }).catch(function(err){ done(err); });
+    });
+
+    it('[8]- Get UFs From Modules', function(done){
+        request.get(`/module/all/ufs`, token).then(function(res){
+            expect(res.status).to.equal(200);
+            expect(res.body.body[0]._id).to.equal(uf.moduleId);
+            expect(res.body.body[0].ufs[0]._id).to.equal(uf_id);
+            done();
+        }).catch(function(err){ done(err); });
+    });
 });

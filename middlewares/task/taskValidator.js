@@ -12,13 +12,21 @@ const {
 let taskSchema = Joi.object({
     ufId: Joi.string()
         .pattern(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i)
-        .min(1)
         .required()
         .messages({
             "string.base": `"UfId" should be a type of 'text'`,
             "string.empty": `"UfId" cannot be an empty field`,
             "any.required": `"UfId" is a required field`
         }),
+
+    ruleId: Joi.string()
+        .pattern(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i)
+        .required()
+        .messages({
+            "string.base": `"ruleId" should be a type of 'text'`,
+            "string.empty": `"ruleId" cannot be an empty field`,
+            "any.required": `"ruleId" is a required field`
+    }),
 
     name: Joi.string()
         .pattern(/^[A-z0-9\s]+$/)
