@@ -14,7 +14,7 @@ router.post("/login", async function(req, res, next){
         return res.sendStatus(401);
     }
 
-    const token = await jwt.sign({ user: 'admin' }, secret, {expiresIn: '10h'});
+    const token = await jwt.sign({ user: 'admin' }, secret, {expiresIn: '2h'});
 
     return res.send({
         token: token
@@ -23,13 +23,14 @@ router.post("/login", async function(req, res, next){
 
 router.get("/:token", async function (req, res, next) {
 
-    const token = jwt.verify(req.params.token, secret);
+    jwt.verify(req.params.token, secret, function (err, token) {
 
-    if (Date.now() >= token.exp * 1000 && token) {
-        return res.redirect('/test/login');
-    }
-
-    return res.sendFile("mochawesome.html", {root: 'public'});
+        if (err || (Date.now() >= token.exp * 1000)) {
+            return res.redirect('/test/login');
+        }
+    
+        return res.sendFile("mochawesome.html", {root: 'public'});
+    });
 });
 
 
