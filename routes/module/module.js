@@ -6,13 +6,14 @@ const {
     create,
     update,
     get,
-    archive
+    archive,
+    getAllArchived, getAllUfsFromModules
 } = require('../../controllers/module/moduleController');
 
 // Middlewares
 const { isAuthenticated } = require('../../middlewares/auth/authentication');
 const { validateModuleSchema, validateModuleArchivedSchema } = require('../../middlewares/module/moduleValidator');
-
+const { validateModuleExistsAndIsFromRequestUser } = require ('../../middlewares/checker/module/moduleChecker')
 // Auth
 router.use(isAuthenticated);
 
@@ -20,17 +21,15 @@ router.use(isAuthenticated);
  * CRUD
  */
 router.post("/", validateModuleSchema, create);
-router.put("/:module_id", validateModuleSchema, update)
-router.put("/:module_id/archive", validateModuleArchivedSchema, archive);
-router.get("/:module_id", get);
+router.put("/:module_id", [validateModuleSchema, validateModuleExistsAndIsFromRequestUser], update)
+router.put("/:module_id/archive", [validateModuleArchivedSchema, validateModuleExistsAndIsFromRequestUser], archive);
+router.get("/:module_id", validateModuleExistsAndIsFromRequestUser, get);
+router.get("/all/archived", getAllArchived);
+router.get("/all/ufs", getAllUfsFromModules);
 
 /**
  * Data retrievers
  */
-router.get("/all/archived", function (req, res) {
-    //Return all modules that are archived by the user
-    //If there are no modules archived, return message and code
-});
 
 router.get("/all/ufs", function (req, res) {
     //Return all modules with their ufs inside

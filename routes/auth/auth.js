@@ -7,14 +7,10 @@ const auth = require('../../controllers/auth/authController');
 // Middlewares
 const { validateUserSchema } = require('../../middlewares/user/userRegisterValidator');
 const { validateUserLoginSchema } = require("../../middlewares/user/userLoginValidator");
+const { validateAuthSchema } = require("../../middlewares/user/authValidator");
 
 /** Auth Routes **/
-router.post("/auth", function (req, res) {
-    //Check if req email is in db
-    //Return json with "action": "login|register" format
-});
-
 router.post("/register", validateUserSchema, auth.registerController);
 router.post("/login", validateUserLoginSchema, auth.loginController);
-
+router.post("/auth", validateAuthSchema, auth.authController);
 module.exports = router;
