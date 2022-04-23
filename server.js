@@ -14,9 +14,6 @@ const { HttpStatusCode, HttpStatusMessage } = require('./config/status-codes');
 // Connection
 const db = require('./connection');
 
-// Mochaawesome
-app.use(express.static(__dirname +'/mochawesome-report'));
-
 /**
  * Custom Routers
  */
@@ -33,9 +30,12 @@ const testRouter = require('./routes/test');
 app.use(express.json());
 app.use(morgan('dev'));
 
+// Mochawesome
+app.use('/test', express.static(__dirname + '/public'));
+
 // Testing endpoint
 app.get('/', function (req, res) {
-    res.status(HttpStatusCode.OK).send(HttpStatusMessage.OK);
+    return res.status(HttpStatusCode.OK).send(HttpStatusMessage.OK);
 });
 
 /** Routes */

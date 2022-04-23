@@ -1,19 +1,37 @@
 const express = require('express');
 const router = express.Router();
-const exec = require('child_process').exec;
-const fs = require('fs');
+const jwt = require('jsonwebtoken');
 
-router.get("/", async function (req, res, next) {
-    try {
-        await exec('npm run test:awesome');
-        return res.sendFile("mochawesome.html", { root: 'mochawesome-report' });
-    } catch (e) {
-        console.error(e); // should contain code (exit code) and signal (that caused the termination).
-    }
-});
+const secret = 'testsecret';
 
 router.get("/login", function(req, res, next){
     return res.sendFile('login.html', {root: 'views'});
 });
+
+router.post("/login", async function(req, res, next){
+    
+    if(!(req.body.username === "admin" && req.body.password === "klendar")){
+        return res.sendStatus(401);
+    }
+
+    const token = await jwt.sign({ user: 'admin' }, secret, {expiresIn: '10h'});
+
+    return res.send({
+        token: token
+    });
+});
+
+router.get("/:token", async function (req, res, next) {
+
+    const token = jwt.verify(req.params.token, secret);
+
+    if (Date.now() >= token.exp * 1000 && token) {
+        return res.redirect('/test/login');
+    }
+
+    return res.sendFile("mochawesome.html", {root: 'public'});
+});
+
+
 
 module.exports = router;    

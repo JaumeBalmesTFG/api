@@ -44,8 +44,36 @@
         <input type="text" placeholder="username" id="username">
         <input type="password" placeholder="password" id="password">
         <br>
-        <input type="submit" value="send">
+        <input type="button" value="send" id="button">
     </div>
-    
+    <script>
+        let user = document.getElementById('username');
+        let pass = document.getElementById('password');
+        let btn  = document.getElementById('button');
+
+        btn.onclick = function(){
+
+            let data = {
+                username: user.value,
+                password: pass.value
+            };
+
+            fetch('/test/login', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(async function(response){
+                var data = await response.json();
+                
+                if(data.token){
+                    location.href = `/test/${data.token}`;
+                }
+            })
+            .catch(err => {console.log("error");})
+        };
+    </script>
 </body>
 </html>
