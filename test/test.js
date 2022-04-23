@@ -1,7 +1,7 @@
 const { default: mongoose } = require('mongoose');
 const { URI_TEST } = require('../config/config.js');
 
-describe('Start Database', () => {
+describe('API', () => {
     before(function (done) {
         mongoose.connect(URI_TEST, done)
     });

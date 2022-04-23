@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon server",
+    "dev": "nodemon server --ignore 'mochawesome-report/*'",
     "start": "node server",
     "test": "mocha",
-    "test:awesome": "mocha ./test/test.js --exit --reporter mochawesome || true",
+    "test:awesome": "mocha ./test/test.js --reporter mochawesome || true",
     "open:report": "open mochawesome-report/mochawesome.html",
     "prod": "node server mongodb://db:27017/project"
   },

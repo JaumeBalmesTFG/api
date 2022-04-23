@@ -1,21 +1,19 @@
 const express = require('express');
-const path = require('path');
 const router = express.Router();
+const exec = require('child_process').exec;
+const fs = require('fs');
 
-function run(cmd, callback) {
-    var spawn = require('child_process').spawn;
-    var command = spawn(cmd);
-    var result = '';
-    command.stdout.on('data', function(data) {
-         result += data.toString();
-    });
-    command.on('close', function(code) {
-        return callback(result);
-    });
-}
+router.get("/", async function (req, res, next) {
+    try {
+        await exec('npm run test:awesome');
+        return res.sendFile("mochawesome.html", { root: 'mochawesome-report' });
+    } catch (e) {
+        console.error(e); // should contain code (exit code) and signal (that caused the termination).
+    }
+});
 
-router.get("/", function (req, res, next) {
-    res.sendFile("mochawesome.html", {root: 'mochawesome-report'});
+router.get("/login", function(req, res, next){
+    return res.sendFile('login.html', {root: 'views'});
 });
 
 module.exports = router;    

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background: #667db6;
+            /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #667db6, #0082c8, #0082c8, #667db6);
+            /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #667db6, #0082c8, #0082c8, #667db6);
+            /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+        }
+
+        #form{
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            align-items: center;
+            margin: 15% auto;
+            padding: 15px;
+            width: 300px;
+            height: 180px;
+            background-color: white;
+            border-radius: 10px;
+            flex-direction: column;
+        }
+
+        input{
+            width: 80% !important;
+            box-sizing: content-box;
+            padding: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="form">
+        <h3>Login Tests</h3>
+        <input type="text" placeholder="username" id="username">
+        <input type="password" placeholder="password" id="password">
+        <br>
+        <input type="submit" value="send">
+    </div>
+    
+</body>
+</html>

@@ -14,10 +14,8 @@ const { HttpStatusCode, HttpStatusMessage } = require('./config/status-codes');
 // Connection
 const db = require('./connection');
 
-
 // Mochaawesome
 app.use(express.static(__dirname +'/mochawesome-report'));
-
 
 /**
  * Custom Routers
@@ -30,8 +28,6 @@ const truancyRouter = require("./routes/truancy/truancy");
 const ufRouter = require("./routes/uf/uf");
 const testRouter = require('./routes/test');
 
-// Views
-app.use(express.static('public'))
 
 // Middlewares
 app.use(express.json());
