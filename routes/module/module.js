@@ -7,7 +7,9 @@ const {
     update,
     get,
     archive,
-    getAllArchived, getAllUfsFromModules
+    getAllArchived, 
+    getAllUfsFromModules, 
+    getAll
 } = require('../../controllers/module/moduleController');
 
 // Middlewares
@@ -26,6 +28,9 @@ router.put("/:module_id/archive", [validateModuleArchivedSchema, validateModuleE
 router.get("/:module_id", validateModuleExistsAndIsFromRequestUser, get);
 router.get("/all/archived", getAllArchived);
 router.get("/all/ufs", getAllUfsFromModules);
+router.get("/all", getAll);
+
+
 
 /**
  * Data retrievers
@@ -36,10 +41,8 @@ router.get("/all/ufs", function (req, res) {
     //In case the user does not have any module and uf, return message and code
 });
 
-router.get("/all", function (req, res) {
-    //THE BEAST
-    //Return all modules with their ufs inside. Inside the ufs, return all the tasks and all the rules, also
-    //Return the number of truancies of the uf (number of hours not just a SUM of registers) as an int called "numTruancies"
-});
+//THE BEAST
+//Return all modules with their ufs inside. Inside the ufs, return all the tasks and all the rules, also
+//Return the number of truancies of the uf (number of hours not just a SUM of registers) as an int called "numTruancies"
 
 module.exports = router;

@@ -14,6 +14,11 @@ const taskSchema = new Schema({
         type: Schema.Types.ObjectId,
         required: true
     },
+
+    ruleId: {
+        type: Schema.Types.ObjectId,
+        required: true
+    },
     
     name: {
         type: String,
