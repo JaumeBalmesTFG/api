@@ -15,8 +15,8 @@ exports.isAuthenticated = async function (req, res, next) {
         const decoded = await checkToken(token);
 
         if (decoded) {
-            req.authUserId = decoded._id;
-            req.email = decoded.email;
+            res.locals.authUserId = decoded._id;
+            res.locals.email = decoded.email;
             return next();
         }
     }
