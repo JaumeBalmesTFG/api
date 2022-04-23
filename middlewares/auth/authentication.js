@@ -8,8 +8,6 @@ exports.isAuthenticated = async function (req, res, next) {
 
     let authHeader = req.get('Authorization');
 
-    console.log(authHeader);
-
     if (authHeader) {
         const token = authHeader.replace('Bearer', '').trim();
         const decoded = await checkToken(token);
