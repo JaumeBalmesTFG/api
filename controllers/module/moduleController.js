@@ -2,6 +2,9 @@
 const Module = require('../../models/module/Module');
 const Uf = require('../../models/uf/Uf');
 
+const Task = require('../../models/task/Task');
+const Rule = require('../../models/rule/Rule');
+
 // Status Messages
 const {
     HttpStatusCode,
@@ -13,6 +16,8 @@ const {
 const {
     checkPathObjectId
 } = require('../../services/checker');
+
+const Truancy = require('../../models/truancy/Truancy');
 const {uf} = require("../../test/requests/hooks");
 
 // Create Module
@@ -63,7 +68,7 @@ exports.create = async function (req, res, next) {
 // Get All Modules
 exports.get = async function (req, res, next) {
 
-    if(!checkPathObjectId(req.params.module_id)){
+    if (!checkPathObjectId(req.params.module_id)) {
         return res.status(HttpStatusCode.BAD_REQUEST).send({
             message: HttpStatusMessage.BAD_REQUEST,
             path: req.originalUrl,
@@ -171,7 +176,7 @@ exports.getAllArchived = async function (req, res, next) {
 // Update Module
 exports.update = async function (req, res, next) {
 
-    if(!checkPathObjectId(req.params.module_id)){
+    if (!checkPathObjectId(req.params.module_id)) {
         return res.status(HttpStatusCode.BAD_REQUEST).send({
             message: HttpStatusMessage.BAD_REQUEST,
             path: req.originalUrl,
@@ -184,7 +189,7 @@ exports.update = async function (req, res, next) {
 
     const match = await Module.findOne({ _id: req.params.module_id, authorId: res.locals.authUserId, name: name });
 
-    if(match){
+    if (match) {
         return res.status(HttpStatusCode.CONFLICT).send({
             message: ResponseMessage.ALREADY_EXISTS,
             path: req.originalUrl,
@@ -195,7 +200,7 @@ exports.update = async function (req, res, next) {
 
     const doc = await Module.findOne({ _id: req.params.module_id, authorId: res.locals.authUserId });
 
-    if(!doc){
+    if (!doc) {
         return res.status(HttpStatusCode.NOT_FOUND).send({
             message: HttpStatusMessage.NOT_FOUND,
             path: req.originalUrl,
@@ -207,7 +212,7 @@ exports.update = async function (req, res, next) {
     doc.name = name;
     doc.color = color;
 
-    await doc.save(function (err, obj){
+    await doc.save(function (err, obj) {
         if (err) {
             return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
                 error: ResponseMessage.DATABASE_ERROR,
@@ -229,7 +234,7 @@ exports.update = async function (req, res, next) {
 // Archive Module
 exports.archive = async function (req, res, next) {
 
-    if(!checkPathObjectId(req.params.module_id)){
+    if (!checkPathObjectId(req.params.module_id)) {
         return res.status(HttpStatusCode.BAD_REQUEST).send({
             message: HttpStatusMessage.BAD_REQUEST,
             path: req.originalUrl,
@@ -240,7 +245,8 @@ exports.archive = async function (req, res, next) {
 
     const match = await Module.findOne({  _id: req.params.module_id, authorId: res.locals.authUserId });
 
-    if(!match){
+
+    if (!match) {
         return res.status(HttpStatusCode.NOT_FOUND).send({
             message: HttpStatusMessage.NOT_FOUND,
             path: req.originalUrl,
@@ -278,4 +284,80 @@ exports.archive = async function (req, res, next) {
             body: req.body
         });
     });
-}
+};
+
+exports.getAll = async function (req, res, next) {
+
+    // Get modules
+    var modules = await Module.find({ authorId: req.authUserId, archived: false }, { _id: 1, color: 1, name: 1 }).lean();
+
+    // Save Modules Promises
+    var ufPromises = modules.map(async function (m, i) {
+        m.ufs = await Uf.find({ moduleId: m._id, authorId: req.authUserId }, { createdAt: 0, updatedAt: 0, __v: 0 }).lean();
+
+        var taskPromises = m.ufs.map(async function (uf, i) {
+
+            uf.truancies = await Truancy.find({ ufId: uf._id, authorId: req.authUserId }, { hours: 1 });
+
+            uf.tasks = await Task.find({ ufId: uf._id, authorId: req.authUserId }, { ruleId: 1, grade: 1, name: 1 }).lean();
+
+            var rulePromises = uf.tasks.map(async function (task, i) {
+                task.rule = await Rule.findById(task.ruleId, { percentage: 1, title: 1 }).lean();
+                return task;
+            });
+
+            uf.tasks = await Promise.all(rulePromises).then(function (res) { return res; });
+            return uf;
+        });
+
+        m.ufs = await Promise.all(taskPromises).then(function (res) { return res; });
+
+        return m;
+    });
+
+    // Get Promises
+    modules = await Promise.all(ufPromises).then(function (res) { return res; });
+
+    // Calc grades
+    modules.forEach(function (m) {
+
+        m.globalModuleGrade = 0;
+
+        m.ufs.forEach(function (uf) {
+            var grades = {};
+            var calcGrade = 0;
+            var calcTruancy = 0;
+
+            uf.tasks.forEach(function (task) {
+                grades[task.rule.title] = { percentage: task.rule.percentage, grade: 0 };
+            });
+
+            uf.tasks.forEach(function (task) {
+                grades[task.rule.title].grade += parseFloat(task.grade);
+            });
+
+            // Calc uf global grade
+            Object.keys(grades).forEach(function(key) {
+                calcGrade += ((grades[key].percentage / 100) * grades[key].grade);
+            });
+
+            uf.globalUfGrade = calcGrade.toFixed(2);
+
+            m.globalModuleGrade += parseFloat(uf.globalUfGrade);
+
+            // Calc Truancies
+            uf.truancies.forEach(function(trn){
+                calcTruancy += trn.hours;
+            });
+
+            uf.totalTruancies = (100 / uf.hours) * calcTruancy;
+
+            return uf.globalUfGrade;
+        });
+
+        m.globalModuleGrade = m.globalModuleGrade / m.ufs.length;
+
+    });
+
+    return res.send(modules);
+};
