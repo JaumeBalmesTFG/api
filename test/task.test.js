@@ -28,12 +28,6 @@ describe('/Task', function () {
     let task = { ufId: null, ...hooks.task }
 
     this.beforeAll(async function () {
-        
-        await User.deleteMany({});
-        await Module.deleteMany({});
-        await Uf.deleteMany({});
-        await Task.deleteMany({});
-
         await request.auth('/register', hooks.user).then(function (res) {
             token = res.body.token;
         });
@@ -116,5 +110,12 @@ describe('/Task', function () {
             expect(res.status).to.equal(500);
             done();
         }).catch(function (err) { done(err); });
+    });
+
+    this.afterAll(async function(){
+        await User.deleteMany({});
+        await Module.deleteMany({});
+        await Uf.deleteMany({});
+        await Task.deleteMany({});
     });
 });

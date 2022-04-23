@@ -31,11 +31,6 @@ describe('/Truancy', function () {
     }
 
     this.beforeAll(async function () {
-        await User.deleteMany({});
-        await Module.deleteMany({});
-        await Uf.deleteMany({});
-        await Truancy.deleteMany({});
-
         await request.auth('/register', hooks.user).then(function (res) {
             token = res.body.token;
         });
@@ -104,5 +99,12 @@ describe('/Truancy', function () {
             expect(res.status).to.equal(404);
             done();
         }).catch(function (err) { done(err); });
+    });
+
+    this.afterAll(async function(){
+        await User.deleteMany({});
+        await Module.deleteMany({});
+        await Uf.deleteMany({});
+        await Truancy.deleteMany({});
     });
 });

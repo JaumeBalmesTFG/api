@@ -23,13 +23,11 @@ describe('/Module', function () {
     let module_id;
     let token;
 
-    this.beforeAll(async function () {
-        await User.deleteMany({});
-        await Module.deleteMany({});
+    this.beforeAll(async function(){
         await request.auth('/register', hooks.user).then(function(res){
             token = res.body.token;
         });
-    });
+    })
     
     // Test Cases
     it('[1]- Create Module', function (done) {

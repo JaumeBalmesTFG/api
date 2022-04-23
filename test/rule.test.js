@@ -30,12 +30,7 @@ describe('/Rule', function () {
         ...hooks.rule
     }
 
-    this.beforeAll(async function () {
-        await User.deleteMany({});
-        await Module.deleteMany({});
-        await Uf.deleteMany({});
-        await Rule.deleteMany({});
-
+    this.beforeAll(async function(){
         await request.auth('/register', hooks.user).then(function (res) {
             token = res.body.token;
         });
@@ -71,7 +66,6 @@ describe('/Rule', function () {
     it('[3]- Update Rule', function (done) {
         rule.title = "Edited";
         request.edit(`/rule/${ruleId}/edit`, token, rule).then(function (res) {
-            console.log(res.body);
             expect(res.body.body.title).to.equal("Edited");
             expect(res.status).to.equal(200);
             done();
@@ -112,4 +106,12 @@ describe('/Rule', function () {
             done();
         }).catch(function (err) { done(err); });
     });
+
+    this.afterAll(async function () {
+        await User.deleteMany({});
+        await Module.deleteMany({});
+        await Uf.deleteMany({});
+        await Rule.deleteMany({});
+    });
+
 });
