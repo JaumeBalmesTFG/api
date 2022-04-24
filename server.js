@@ -31,7 +31,7 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 // Mochawesome
-app.use('/test', express.static(__dirname + '/public'));
+app.use('/test', express.static(__dirname + '/public/mocha'));
 
 // Testing endpoint
 app.get('/', function (req, res) {

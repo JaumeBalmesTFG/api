@@ -8,7 +8,7 @@
     "start": "node server",
     "test": "mocha ./test/test.js",
     "dev:awesome": "npm run test:awesome && nodemon server --ignore 'mochawesome-report/*'",
-    "test:awesome": "mocha --exit ./test/test.js --reporter mochawesome --reporter-options reportDir=public",
+    "test:awesome": "mocha --exit ./test/test.js --reporter mochawesome --reporter-options reportDir=public/mocha",
     "open:report": "open mochawesome-report/mochawesome.html",
     "prod": "node server mongodb://db:27017/project"
   },

@@ -54,7 +54,7 @@ router.get("/:token", async function (req, res, next) {
         res.send('error on tests');
     };
 
-    return res.sendFile("mochawesome.html", {root: 'public'});
+    return res.sendFile("mochawesome.html", {root: 'public/mocha'});
 });
 
 
