@@ -19,7 +19,7 @@ chai.use(chaiHttp);
 describe('/Register', function () {
 
     // Before Each Test | Drop Users Table Data
-    this.beforeEach(async function () {
+    this.afterEach(async function () {
         await User.deleteMany({});
     });
 

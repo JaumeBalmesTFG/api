@@ -21,6 +21,11 @@ describe('/Login', function () {
         request.auth('/register', hooks.user).then();
     });
 
+
+    this.afterAll(async function(){
+        await User.deleteMany({});
+    });
+
     // Test Cases
     it('[1]- Login', function (done) {
         request.auth('/login', {
@@ -58,9 +63,5 @@ describe('/Login', function () {
             expect(res.status).to.equal(406);
             done();
         }).catch(function(err){ done(err); });
-    });
-
-    this.afterAll(async function(){
-        await User.deleteMany({});
     });
 });
