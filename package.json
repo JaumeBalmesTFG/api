@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon server --ignore public/",
+    "dev": "nodemon server --ignore public/mocha/",
     "start": "node server",
     "test": "mocha ./test/test.js",
     "dev:awesome": "npm run test:awesome && nodemon server --ignore 'mochawesome-report/*'",
