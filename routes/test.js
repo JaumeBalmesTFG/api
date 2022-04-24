@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 
 const secret = 'testsecret';
 
+
 router.get("/login", function(req, res, next){
     return res.sendFile('login.html', {root: 'views'});
 });

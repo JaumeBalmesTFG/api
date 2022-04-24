@@ -57,6 +57,14 @@ describe('/Module', function () {
         }).catch(function(err){ done(err); });
     });
 
+    it('[4]- Archive Module', function (done) {
+        request.edit(`/module/${module_id}/archive`, token, { archived: true }).then(function(res){
+            expect(res.body.body.archived).to.equal(true);
+            expect(res.status).to.equal(200);
+            done();
+        
+        }).catch(function(err){ done(err); });
+    });
 
     it('[4]- Get Module', function(done){
         request.get(`/module/${module_id}`, token).then(function(res){
