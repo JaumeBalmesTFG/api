@@ -25,21 +25,11 @@ describe('/Module', function () {
     let token;
     let uf = { moduleId: null, ...hooks.uf };
 
-    this.beforeAll(async function () {
-        await User.deleteMany({});
-        await Module.deleteMany({});
-        await Uf.deleteMany({});
+    this.beforeAll(async function(){
         await request.auth('/register', hooks.user).then(function(res){
             token = res.body.token;
         });
-        await request.post('/module', token, hooks.secondModule).then(function (res) {
-            uf.moduleId = res.body.body._id;
-        });
-
-        await request.post('/uf/create', token, uf).then(function(res){
-            uf_id = res.body.body._id;
-        });
-    });
+    })
     
     // Test Cases
     it('[1]- Create Module', function (done) {

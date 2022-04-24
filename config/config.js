@@ -7,6 +7,9 @@ module.exports = {
   // Databse connection uri
   URI: process.argv[2] || "mongodb://127.0.0.1:27017/testAPI",
 
+  // Test Mocha Database Uri
+  URI_TEST: "mongodb://127.0.0.1:27017/test",
+
   // Number of rounds for the password encryption
   ROUNDS: 8,
 

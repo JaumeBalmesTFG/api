@@ -13,7 +13,7 @@ exports.auth = function (url, data, callback) {
 }
 
 exports.post = function (url, token, data) {
-    return  chai.request(server)
+    return chai.request(server)
         .post(url)
         .set({ "Authorization": `Bearer ${token}` })
         .send(data);

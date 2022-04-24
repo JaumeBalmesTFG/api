@@ -8,18 +8,16 @@ const User = require('../models/auth/User');
 
 // Custom Requests
 const request = require('./requests/functions');
-
-// Hooks
 const hooks = require('./requests/hooks');
 
 // Middleware
 chai.use(chaiHttp);
 
 // Register Unit Test
+'use strict';
 describe('/Login', function () {
 
-    this.beforeAll(async function () {
-        await User.deleteMany({});
+    this.beforeAll(function () {
         request.auth('/register', hooks.user).then();
     });
 
@@ -60,5 +58,9 @@ describe('/Login', function () {
             expect(res.status).to.equal(406);
             done();
         }).catch(function(err){ done(err); });
+    });
+
+    this.afterAll(async function(){
+        await User.deleteMany({});
     });
 });

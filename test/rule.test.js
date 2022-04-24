@@ -30,12 +30,7 @@ describe('/Rule', function () {
         ...hooks.rule
     }
 
-    this.beforeAll(async function () {
-        await User.deleteMany({});
-        await Module.deleteMany({});
-        await Uf.deleteMany({});
-        await Rule.deleteMany({});
-
+    this.beforeAll(async function(){
         await request.auth('/register', hooks.user).then(function (res) {
             token = res.body.token;
         });
@@ -111,4 +106,12 @@ describe('/Rule', function () {
             done();
         }).catch(function (err) { done(err); });
     });
+
+    this.afterAll(async function () {
+        await User.deleteMany({});
+        await Module.deleteMany({});
+        await Uf.deleteMany({});
+        await Rule.deleteMany({});
+    });
+
 });

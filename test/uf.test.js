@@ -28,11 +28,7 @@ describe('/Uf', function () {
         ...hooks.uf
     }
 
-    this.beforeAll(async function () {
-        await User.deleteMany({});
-        await Module.deleteMany({});
-        await Uf.deleteMany({});
-
+    this.beforeAll(async function (done) {
         await request.auth('/register', hooks.user).then(function (res) {
             token = res.body.token;
         });
@@ -47,7 +43,6 @@ describe('/Uf', function () {
         request.post('/uf/create', token, uf).then(function (res) {
             expect(res.status).to.equal(201);
             uf_id = res.body.body._id;
-
             done();
         }).catch(function (err) { done(err); });
     });
@@ -95,5 +90,11 @@ describe('/Uf', function () {
             expect(res.status).to.equal(401);
             done();
         }).catch(function (err) { done(err); });
+    });
+
+    this.afterAll(async function(){
+        await User.deleteMany({});
+        await Module.deleteMany({});
+        await Uf.deleteMany({});
     });
 });
