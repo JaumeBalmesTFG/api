@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon server",
     "start": "node server",
-    "test": "mocha",
+    "test": "mocha ./test/test.js",
     "dev:awesome": "npm run test:awesome && nodemon server --ignore 'mochawesome-report/*'",
     "test:awesome": "mocha --exit ./test/test.js --reporter mochawesome --reporter-options reportDir=public || true",
     "open:report": "open mochawesome-report/mochawesome.html",

@@ -28,14 +28,21 @@ describe('/Uf', function () {
         ...hooks.uf
     }
 
-    this.beforeAll(async function (done) {
-        await request.auth('/register', hooks.user).then(function (res) {
+    this.beforeAll(function () {
+        request.auth('/register', hooks.user).then(function (res) {
             token = res.body.token;
         });
 
-        await request.post('/module', token, hooks.module).then(function (res) {
+        request.post('/module', token, hooks.module).then(function (res) {
             uf.moduleId = res.body.body._id;
         });
+    });
+
+
+    this.afterAll(async function(){
+        await User.deleteMany({});
+        await Module.deleteMany({});
+        await Uf.deleteMany({});
     });
 
     // Test Cases
@@ -90,11 +97,5 @@ describe('/Uf', function () {
             expect(res.status).to.equal(401);
             done();
         }).catch(function (err) { done(err); });
-    });
-
-    this.afterAll(async function(){
-        await User.deleteMany({});
-        await Module.deleteMany({});
-        await Uf.deleteMany({});
     });
 });
