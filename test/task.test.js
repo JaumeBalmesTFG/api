@@ -47,7 +47,7 @@ describe('/Task', function () {
             expect(res.status).to.equal(201);
             taskId = res.body.body._id;
             done();
-        }).catch(function (err) { done(err); });
+        }).catch(function (err) { done(err);  });
     });
 
     it('[2]- Edit Task', function (done) {

@@ -28,16 +28,15 @@ describe('/Uf', function () {
         ...hooks.uf
     }
 
-    this.beforeAll(function () {
-        request.auth('/register', hooks.user).then(function (res) {
+    this.beforeAll(async function () {
+        await request.auth('/register', hooks.user).then(function (res) {
             token = res.body.token;
         });
 
-        request.post('/module', token, hooks.module).then(function (res) {
+        await request.post('/module', token, hooks.module).then(function (res) {
             uf.moduleId = res.body.body._id;
         });
     });
-
 
     this.afterAll(async function(){
         await User.deleteMany({});
@@ -47,6 +46,7 @@ describe('/Uf', function () {
 
     // Test Cases
     it('[1]- Create UF', function (done) {
+        console.log(uf);
         request.post('/uf/create', token, uf).then(function (res) {
             expect(res.status).to.equal(201);
             uf_id = res.body.body._id;
