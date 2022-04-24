@@ -1,21 +1,35 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const {execSync} = require('child_process');
 
 const secret = 'testsecret';
 
 
-router.get("/login", function(req, res, next){
-    return res.sendFile('login.html', {root: 'views'});
+// Functions
+function execTests(){
+    try {
+        execSync('npm run test:awesome');   
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
+
+// Tests
+
+router.get("/", function (req, res, next) {
+    return res.sendFile('login.html', { root: 'public/views' });
 });
 
-router.post("/login", async function(req, res, next){
-    
-    if(!(req.body.username === "admin" && req.body.password === "klendar")){
+router.post("/login", async function (req, res, next) {
+
+    if (!(req.body.username === "admin" && req.body.password === "klendar")) {
         return res.sendStatus(401);
     }
 
-    const token = await jwt.sign({ user: 'admin' }, secret, {expiresIn: '2h'});
+    const token = await jwt.sign({ user: 'admin' }, secret, { expiresIn: '2h' });
 
     return res.send({
         token: token
@@ -24,14 +38,23 @@ router.post("/login", async function(req, res, next){
 
 router.get("/:token", async function (req, res, next) {
 
-    jwt.verify(req.params.token, secret, function (err, token) {
+    try {
 
-        if (err || (Date.now() >= token.exp * 1000)) {
-            return res.redirect('/test/login');
+        const decoded = jwt.verify(req.params.token, secret);
+
+        if (!decoded || (Date.now() >= decoded.exp * 1000)) {
+            throw new Error;
         }
-    
-        return res.sendFile("mochawesome.html", {root: 'public'});
-    });
+
+    } catch (error) {
+        return res.redirect('/test');
+    }
+
+    if(!execTests()){
+        res.send('error on tests');
+    };
+
+    return res.sendFile("mochawesome.html", {root: 'public'});
 });
 
 
