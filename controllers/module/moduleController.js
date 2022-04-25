@@ -25,8 +25,6 @@ exports.create = async function (req, res, next) {
 
     const { name, color } = req.body;
 
-    console.log(res.locals.authUserId);
-
     const match = await Module.findOne({
         authorId: res.locals.authUserId,
         name: name

@@ -53,7 +53,6 @@ describe('/Task', function () {
     // Test Cases
     it('[1]- Create Task', function (done) {
         request.post('/task/create', token, task).then(function (res) {
-            console.log(res.body);
             expect(res.status).to.equal(201);
             taskId = res.body.body._id;
             done();

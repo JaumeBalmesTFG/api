@@ -46,7 +46,6 @@ describe('/Uf', function () {
 
     // Test Cases
     it('[1]- Create UF', function (done) {
-        console.log(uf);
         request.post('/uf/create', token, uf).then(function (res) {
             expect(res.status).to.equal(201);
             uf_id = res.body.body._id;
