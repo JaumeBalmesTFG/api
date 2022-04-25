@@ -1,15 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const {execSync} = require('child_process');
+const { execSync } = require('child_process');
 
-const secret = 'testsecret';
-
+const secret = '8X!?m+cL2Fw]-yAm7G>%ePPQp}0VH0igHzIBma1,vtJJUV)$w0}Yq[l5wf$sb7)';
 
 // Functions
-function execTests(){
+async function execTests() {
     try {
-        execSync('npm run test:awesome');   
+        await execSync('npm run test:awesome');
         return true;
     } catch (error) {
         return false;
@@ -47,14 +46,20 @@ router.get("/:token", async function (req, res, next) {
         }
 
     } catch (error) {
+        console.log("Error 2: " + error);
         return res.redirect('/test');
     }
 
+
     if(!execTests()){
-        res.send('error on tests');
+        return res.send('error on tests');
     };
 
     return res.sendFile("mochawesome.html", {root: 'public/mocha'});
+
+
+
+
 });
 
 
