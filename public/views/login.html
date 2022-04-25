@@ -75,7 +75,6 @@
                 var data = await response.json();
                 
                 if(data.token){
-                    alert("Logged");
                     location.href = `/test/${data.token}`;
                 }
             })
