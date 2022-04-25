@@ -66,9 +66,16 @@
                 body: JSON.stringify(data)
             })
             .then(async function(response){
+
+                if(response.status !== 200){
+                    alert("Invalid Login");
+                    return;
+                }
+
                 var data = await response.json();
                 
                 if(data.token){
+                    alert("Logged");
                     location.href = `/test/${data.token}`;
                 }
             })

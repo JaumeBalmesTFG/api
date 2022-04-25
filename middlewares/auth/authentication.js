@@ -5,7 +5,6 @@ const { HttpStatusCode, HttpStatusMessage, ResponseMessage } = require('../../co
 
 exports.isAuthenticated = async function (req, res, next) {
 
-
     let authHeader = req.get('Authorization');
 
     if (authHeader) {

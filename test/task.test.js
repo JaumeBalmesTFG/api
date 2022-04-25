@@ -25,7 +25,11 @@ describe('/Task', function () {
     let token;
     let taskId;
     let uf = { moduleId: null, ...hooks.uf };
-    let task = { ufId: null, ...hooks.task }
+    let task = { ufId: null, ruleId: null,  ...hooks.task };
+    let rule = {
+        ufId: null,
+        ...hooks.rule
+    };
 
     this.beforeAll(async function () {
         await request.auth('/register', hooks.user).then(function (res) {
@@ -38,16 +42,22 @@ describe('/Task', function () {
 
         await request.post('/uf/create', token, uf).then(function(res){
             task.ufId = res.body.body._id;
+            rule.ufId = res.body.body._id;
+        });
+
+        await request.post('/rule/create', token, rule).then(function(res){
+            task.ruleId = res.body.body._id;
         });
     });
 
     // Test Cases
     it('[1]- Create Task', function (done) {
         request.post('/task/create', token, task).then(function (res) {
+            console.log(res.body);
             expect(res.status).to.equal(201);
             taskId = res.body.body._id;
             done();
-        }).catch(function (err) { done(err); });
+        }).catch(function (err) { done(err);  });
     });
 
     it('[2]- Edit Task', function (done) {
@@ -84,14 +94,14 @@ describe('/Task', function () {
     it('[6]- Create Invalid UfId Task', function (done) {
         let taskTemp = {
             ufId: "6259e3e95f71a80819cb020b",
+            ruleId: task.rule,
             name: task.name,
             description: task.description,
             grade: task.grade,
             dueDate: task.dueDate
         };
 
-
-        request.edit(`/task/${taskId}/edit`, token, taskTemp).then(function (res) {
+        request.post(`/task/${taskId}`, token, taskTemp).then(function (res) {
             expect(res.status).to.equal(404);
             done();
         }).catch(function (err) { done(err); });

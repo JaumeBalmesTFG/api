@@ -30,8 +30,6 @@ router.get("/all/archived", getAllArchived);
 router.get("/all/ufs", getAllUfsFromModules);
 router.get("/all", getAll);
 
-
-
 /**
  * Data retrievers
  */
