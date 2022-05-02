@@ -7,6 +7,9 @@ const path = require('path');
 // Petition Debugger
 const morgan = require('morgan');
 
+// Cors policy
+const cors = require('cors');
+
 // Config
 const { PORT, URI } = require('./config/config');
 const { HttpStatusCode, HttpStatusMessage } = require('./config/status-codes');
@@ -29,6 +32,7 @@ const testRouter = require('./routes/test');
 // Middlewares
 app.use(express.json());
 app.use(morgan('dev'));
+app.use(cors);
 
 // Mochawesome
 app.use('/test', express.static(__dirname + '/public/mocha'));
