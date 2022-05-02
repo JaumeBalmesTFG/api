@@ -116,8 +116,8 @@ exports.loginController = async function (req, res) {
     await bcrypt.compare(body.password, user.password, function(err, response){
         if (err){
             return res.status(HttpStatusCode.CONFLICT).send({
-                error: HttpStatusMessage.CONFLICT,
-                message: ResponseMessage.WRONG_PASSWORD,
+                error: HttpStatusMessage.INTERNAL_SERVER_ERROR,
+                message: HttpStatusMessage.INTERNAL_SERVER_ERROR,
                 path: req.path,
                 method: req.method,
                 body: body
@@ -131,9 +131,10 @@ exports.loginController = async function (req, res) {
                 }
             });
         }
+
         return res.status(HttpStatusCode.CONFLICT).send({
-            error: HttpStatusMessage.INTERNAL_SERVER_ERROR,
-            message: HttpStatusMessage.INTERNAL_SERVER_ERROR,
+            error: HttpStatusMessage.CONFLICT,
+            message: ResponseMessage.WRONG_PASSWORD,
             path: req.path,
             method: req.method,
             body: body
