@@ -25,10 +25,10 @@ router.use(isAuthenticated);
 router.post("/", validateModuleSchema, create);
 router.put("/:module_id", [validateModuleSchema, validateModuleExistsAndIsFromRequestUser], update)
 router.put("/:module_id/archive", [validateModuleArchivedSchema, validateModuleExistsAndIsFromRequestUser], archive);
+router.get("/all", getAll);
 router.get("/:module_id", validateModuleExistsAndIsFromRequestUser, get);
 router.get("/all/archived", getAllArchived);
 router.get("/all/ufs", getAllUfsFromModules);
-router.get("/all", getAll);
 
 /**
  * Data retrievers
