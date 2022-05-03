@@ -289,17 +289,17 @@ exports.archive = async function (req, res, next) {
 exports.getAll = async function (req, res, next) {
 
     // Get modules
-    var modules = await Module.find({ authorId: req.authUserId, archived: false }, { _id: 1, color: 1, name: 1 }).lean();
+    var modules = await Module.find({ authorId: res.locals.authUserId, archived: false }, { _id: 1, color: 1, name: 1 }).lean();
 
     // Save Modules Promises
     var ufPromises = modules.map(async function (m, i) {
-        m.ufs = await Uf.find({ moduleId: m._id, authorId: req.authUserId }, { createdAt: 0, updatedAt: 0, __v: 0 }).lean();
+        m.ufs = await Uf.find({ moduleId: m._id, authorId: res.locals.authUserId }, { createdAt: 0, updatedAt: 0, __v: 0 }).lean();
 
         var taskPromises = m.ufs.map(async function (uf, i) {
 
-            uf.truancies = await Truancy.find({ ufId: uf._id, authorId: req.authUserId }, { hours: 1 });
+            uf.truancies = await Truancy.find({ ufId: uf._id, authorId: res.locals.authUserId }, { hours: 1 });
 
-            uf.tasks = await Task.find({ ufId: uf._id, authorId: req.authUserId }, { ruleId: 1, grade: 1, name: 1 }).lean();
+            uf.tasks = await Task.find({ ufId: uf._id, authorId: res.locals.authUserId }, { ruleId: 1, grade: 1, name: 1 }).lean();
 
             var rulePromises = uf.tasks.map(async function (task, i) {
                 task.rule = await Rule.findById(task.ruleId, { percentage: 1, title: 1 }).lean();
