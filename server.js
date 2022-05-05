@@ -23,6 +23,7 @@ const ruleRouter = require("./routes/rule/rule");
 const taskRouter = require("./routes/task/task");
 const truancyRouter = require("./routes/truancy/truancy");
 const ufRouter = require("./routes/uf/uf");
+const calendarRouter = require("./routes/calendar/calendar");
 const testRouter = require('./routes/test');
 
 
@@ -54,7 +55,7 @@ app.use("/truancy", truancyRouter);
 app.use("/uf", ufRouter);
 app.use("/test", testRouter);
 app.use("/", authRouter);
-
+app.use("/calendar", calendarRouter);
 
 db.connect()
     .then(function(){
