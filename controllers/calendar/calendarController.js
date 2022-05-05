@@ -82,42 +82,54 @@ exports.get = async function (req, res, next) {
 
 
 
-            let calendarData = {};
+            let calendarData = [{}];
             let auxCounter;
 
             if (allTasks.length > 0 || allTruancies.length > 0) {
                 for (let i = 0; i < modules.length; i++) {
                     auxCounter = 0;
                     for (let j = 0; j < allUfs.length; j++) {
-                        if (modules[i]._id === allUfs[i][j].moduleId) {
-                            return res.send("HOLA");
-                            for (let k = 0; k < allTasks.length; k++) {
-                                calendarData[j].ufName = allUfs[j].name;
-                                calendarData[j].backgroundColor = modules[i].color;
-                                calendarData[j].elementName = allTasks[k].name;
-                                calendarData[j].elementId = allTasks[k]._id;
-                                calendarData[j].date = allTasks[k].dueDate;
-                                calendarData[j].elementType = "task";
-                                auxCounter++;
+                        calendarData[j] = {};
+                        for (let ja = 0; ja < allUfs[j].length; ja++) {
+                            if (modules[i]._id.equals(allUfs[j][ja].moduleId)) {
+                                if (allTasks.length > 0) {
+                                    for (let k = 0; k < allTasks.length; k++) {
+                                        calendarData[j].ufName = allUfs[j][ja].name;
+                                        calendarData[j].backgroundColor = modules[i].color;
+                                        calendarData[j].elementName = allTasks[k].name;
+                                        calendarData[j].elementId = allTasks[k]._id;
+                                        calendarData[j].date = allTasks[k].dueDate;
+                                        calendarData[j].elementType = "task";
+                                        auxCounter++;
+                                    }
+                                }
+
+                                if (allTruancies.length > 0) {
+
+                                    for (let l = 0; l < allTruancies.length; l++) {
+                                        calendarData[l + auxCounter] = {};
+                                        calendarData[l + auxCounter].ufName = allUfs[j][ja].name;
+                                        calendarData[l + auxCounter].backgroundColor = modules[i].color;
+                                        calendarData[l + auxCounter].elementName = allTruancies[l].name;
+                                        calendarData[l + auxCounter].elementId = allTruancies[l]._id;
+                                        calendarData[l + auxCounter].date = allTruancies[l].dueDate;
+                                        calendarData[l + auxCounter].elementType = "truancy";
+                                        auxCounter++;
+                                    }
+                                }
+
+
                             }
-                            for (let l = 0; l < allTruancies.length; l++) {
-                                calendarData[l + auxCounter].ufName = allUfs[j].name;
-                                calendarData[l + auxCounter].backgroundColor = modules[i].color;
-                                calendarData[l + auxCounter].elementName = allTruancies[l].name;
-                                calendarData[l + auxCounter].elementId = allTruancies[l]._id;
-                                calendarData[l + auxCounter].date = allTruancies[l].dueDate;
-                                calendarData[l + auxCounter].elementType = "truancy";
-                                auxCounter++;
-                            }
-                            return res.status(HttpStatusCode.OK).send({
-                                message: HttpStatusMessage.OK,
-                                path: req.originalUrl,
-                                method: req.method,
-                                body: calendarData,
-                            });
                         }
+
                     }
                 }
+                return res.status(HttpStatusCode.OK).send({
+                    message: HttpStatusMessage.OK,
+                    path: req.originalUrl,
+                    method: req.method,
+                    body: calendarData,
+                });
             }
         }
     }
