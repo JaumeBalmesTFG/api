@@ -11,5 +11,5 @@ const { isAuthenticated } = require('../../middlewares/auth/authentication');
 router.use(isAuthenticated);
 
 /** Calendar Route **/
-router.get("/:startDate&:endDate", calendar.get);
+router.get("/", calendar.get);
 module.exports = router;
