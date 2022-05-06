@@ -2,6 +2,7 @@
 // Task Model
 const Uf = require('../../models/uf/Uf');
 const Task = require('../../models/task/Task');
+const Module = require('../../models/module/Module');
 
 // Status Messages
 const {
@@ -13,9 +14,10 @@ const {
 // Create
 exports.create = async function (req, res, next) {
 
-    const { ufId, ruleId, name, grade, description, dueDate } = req.body;
+    const { moduleId, ufId, ruleId, name, grade, description, dueDate } = req.body;
 
-    const matchUf = await Uf.findOne({ _id: ufId, authorId: req.authorId });
+
+    const matchUf = await Uf.findOne({ _id: ufId, authorId: res.locals.authUserId });
 
     if (!matchUf) {
         return res.status(HttpStatusCode.NOT_FOUND).send({
@@ -26,8 +28,21 @@ exports.create = async function (req, res, next) {
         });
     }
 
+    const matchModule = await Module.findOne({ _id: moduleId, authorId: res.locals.authUserId });
+
+    if (!matchModule) {
+        return res.status(HttpStatusCode.NOT_FOUND).send({
+            message: HttpStatusMessage.NOT_FOUND,
+            path: req.originalUrl,
+            method: req.method,
+            body: req.body,
+            culo: true
+        });
+    }
+
     const newTask = new Task({
         authorId: res.locals.authUserId,
+        moduleId: moduleId,
         ufId: ufId,
         ruleId: ruleId,
         name: name,
@@ -61,6 +76,8 @@ exports.update = async function (req, res, next) {
 
     Task.findOneAndUpdate({ _id: req.params.task_id, authorId: res.locals.authUserId, ufId: req.body.ufId },
         {
+            moduleId: body.moduleId,
+            ufId: body.ufId,
             name: body.name,
             grade: body.grade,
             description: body.description,
