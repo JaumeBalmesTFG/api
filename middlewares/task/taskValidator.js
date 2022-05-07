@@ -10,6 +10,16 @@ const {
 } = require('../../config/status-codes');
 
 let taskSchema = Joi.object({
+
+    moduleId: Joi.string()
+        .pattern(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i)
+        .required()
+        .messages({
+            "string.base": `"ModuleId" should be a type of 'text'`,
+            "string.empty": `"ModuleId" cannot be an empty field`,
+            "any.required": `"ModuleId" is a required field`
+        }),
+
     ufId: Joi.string()
         .pattern(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i)
         .required()
