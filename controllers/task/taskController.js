@@ -36,7 +36,6 @@ exports.create = async function (req, res, next) {
             path: req.originalUrl,
             method: req.method,
             body: req.body,
-            culo: true
         });
     }
 
