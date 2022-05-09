@@ -275,6 +275,35 @@ exports.archive = async function (req, res, next) {
     });
 };
 
+exports.getUfsFromModule = function (req, res, next) {
+    const moduleId = req.params.module_id;
+
+    Uf.find({ moduleId: moduleId }, function(err, doc){
+        if(err){
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
+                error: ResponseMessage.DATABASE_ERROR,
+                path: req.originalUrl,
+                method: req.method,
+                body: req.body
+            });
+        }
+
+        if(!doc){
+            return res.status(HttpStatusCode.NOT_FOUND).send({
+                path: req.originalUrl,
+                method: req.method,
+                body: req.body
+            }); 
+        }
+
+        return res.status(HttpStatusCode.OK).send({
+            path: req.originalUrl,
+            method: req.method,
+            body: doc
+        });
+    });
+};
+
 exports.getAll = async function (req, res, next) {
 
     // Get modules
