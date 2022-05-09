@@ -9,6 +9,18 @@ const {
 } = require('../../config/status-codes');
 
 let truancySchema = Joi.object({
+
+    moduleId: Joi.string()
+        .pattern(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i)
+        .min(1)
+        .required()
+        .messages({
+            "string.base": `"moduleId" should be a type of 'text'`,
+            "string.empty": `"moduleId" cannot be an empty field`,
+            "string.min": `"moduleId" should have a minimum length of {#limit}`,
+            "any.required": `"moduleId" is a required field`
+        }),
+
     ufId: Joi.string()
         .pattern(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i)
         .min(1)

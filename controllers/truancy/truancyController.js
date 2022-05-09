@@ -16,9 +16,11 @@ const {
 // Create Truancy
 exports.create = async function (req, res, next) {
 
-    const { ufId, date, reason, hours } = req.body;
+    const { moduleId, ufId, date, reason, hours } = req.body;
 
     const newTruancy = new Truancy({
+        authorId: res.locals.authUserId,
+        moduleId: moduleId,
         ufId: ufId,
         date: date,
         reason: reason,
@@ -79,7 +81,7 @@ exports.update = async function (req, res, next) {
         });
     }
 
-    const { date, reason, hours } = req.body;
+    const { moduleId, ufId, date, reason, hours } = req.body;
 
     const doc = await Truancy.findOne({ _id: req.params.truancy_id});
 
@@ -92,6 +94,8 @@ exports.update = async function (req, res, next) {
         });
     }
 
+    doc.moduleId = moduleId;
+    doc.ufId = ufId;
     doc.date = date;
     doc.reason = reason;
     doc.hours = hours;

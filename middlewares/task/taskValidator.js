@@ -10,6 +10,16 @@ const {
 } = require('../../config/status-codes');
 
 let taskSchema = Joi.object({
+
+    moduleId: Joi.string()
+        .pattern(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i)
+        .required()
+        .messages({
+            "string.base": `"ModuleId" should be a type of 'text'`,
+            "string.empty": `"ModuleId" cannot be an empty field`,
+            "any.required": `"ModuleId" is a required field`
+        }),
+
     ufId: Joi.string()
         .pattern(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i)
         .required()
@@ -51,12 +61,11 @@ let taskSchema = Joi.object({
         }),
 
     grade: Joi.number()
-        .required()
         .min(1)
         .messages({
-            "string.base": `"UfId" should be a type of 'number'`,
-            "string.empty": `"UfId" cannot be an empty field`,
-            "any.required": `"UfId" is a required field`
+            "string.base": `"grade" should be a type of 'number'`,
+            "string.empty": `"grade" cannot be an empty field`,
+            "any.required": `"grade" is a required field`
         }),
 
     dueDate: Joi.date()

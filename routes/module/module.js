@@ -14,7 +14,7 @@ const {
 
 // Middlewares
 const { isAuthenticated } = require('../../middlewares/auth/authentication');
-const { validateModuleSchema } = require('../../middlewares/module/moduleValidator');
+const { validateModuleSchema, validateModuleArchivedSchema } = require('../../middlewares/module/moduleValidator');
 const { validateModuleExistsAndIsFromRequestUser } = require ('../../middlewares/checker/module/moduleChecker')
 // Auth
 router.use(isAuthenticated);
