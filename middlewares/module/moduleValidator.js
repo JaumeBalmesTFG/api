@@ -11,7 +11,6 @@ const {
 
 let moduleSchema = Joi.object({
     name: Joi.string()
-        .pattern(/^[A-z0-9\s]+$/)
         .min(1)
         .required()
         .messages({
