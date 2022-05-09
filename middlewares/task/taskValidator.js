@@ -61,7 +61,6 @@ let taskSchema = Joi.object({
         }),
 
     grade: Joi.number()
-        .min(1)
         .messages({
             "string.base": `"grade" should be a type of 'number'`,
             "string.empty": `"grade" cannot be an empty field`,
