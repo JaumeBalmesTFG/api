@@ -187,17 +187,6 @@ exports.update = async function (req, res, next) {
 
     const { name, color } = req.body;
 
-    const match = await Module.findOne({ _id: req.params.module_id, authorId: res.locals.authUserId, name: name });
-
-    if (match) {
-        return res.status(HttpStatusCode.CONFLICT).send({
-            message: ResponseMessage.ALREADY_EXISTS,
-            path: req.originalUrl,
-            method: req.method,
-            body: req.body
-        });
-    }
-
     const doc = await Module.findOne({ _id: req.params.module_id, authorId: res.locals.authUserId });
 
     if (!doc) {
