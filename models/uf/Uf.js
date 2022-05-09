@@ -12,8 +12,7 @@ const ufSchema = new Schema({
     name: {
         type: String,
         //maxlength: 30,
-        required: true,
-        unique: true
+        required: true
     },
 
     hours: {
