@@ -61,12 +61,11 @@ let taskSchema = Joi.object({
         }),
 
     grade: Joi.number()
-        .required()
         .min(1)
         .messages({
-            "string.base": `"UfId" should be a type of 'number'`,
-            "string.empty": `"UfId" cannot be an empty field`,
-            "any.required": `"UfId" is a required field`
+            "string.base": `"grade" should be a type of 'number'`,
+            "string.empty": `"grade" cannot be an empty field`,
+            "any.required": `"grade" is a required field`
         }),
 
     dueDate: Joi.date()
