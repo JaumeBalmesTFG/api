@@ -18,7 +18,7 @@ const {
 } = require('../../services/checker');
 
 const Truancy = require('../../models/truancy/Truancy');
-const { uf } = require("../../test/requests/hooks");
+const {uf} = require("../../test/requests/hooks");
 
 // Create Module
 exports.create = async function (req, res, next) {
@@ -103,13 +103,13 @@ exports.getAllUfsFromModules = async function (req, res, next) {
         return Module.find({ authorId: res.locals.authUserId, archived: false }).lean();
     }
 
-    async function getUfs(module) {
+    async function getUfs(module){
         return Uf.find({ moduleId: module._id, archived: false }).lean();
     }
 
-    await getModules().then(function (foundModules) {
+    await getModules().then( function (foundModules) {
         modules = foundModules;
-    }).catch(function (err) {
+    }).catch(function(err){
         if (err) {
             return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
                 message: ResponseMessage.DATABASE_ERROR,
@@ -122,7 +122,7 @@ exports.getAllUfsFromModules = async function (req, res, next) {
 
     if (modules.length > 0) {
         for (let i = 0; i < modules.length; i++) {
-            await getUfs(modules[i]).then(function (ufs) {
+            await getUfs(modules[i]).then( function (ufs) {
                 modules[i]['ufs'] = ufs;
             }).catch(function (err) {
                 if (err) {
@@ -243,7 +243,7 @@ exports.archive = async function (req, res, next) {
         });
     }
 
-    const match = await Module.findOne({ _id: req.params.module_id, authorId: res.locals.authUserId });
+    const match = await Module.findOne({  _id: req.params.module_id, authorId: res.locals.authUserId });
 
 
     if (!match) {
@@ -257,7 +257,7 @@ exports.archive = async function (req, res, next) {
 
     match.archived = !match.archived;
 
-    match.save(function (err, doc) {
+    match.save(function(err, doc){
         if (err) {
             return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
                 error: ResponseMessage.DATABASE_ERROR,
@@ -267,7 +267,7 @@ exports.archive = async function (req, res, next) {
             });
         }
 
-        Uf.updateMany({ moduleId: match._id }, { archived: doc.archived }, function (err, doc) {
+        Uf.updateMany({ moduleId: match._id }, {archived: req.body.archived}, function(err, doc){
             if (err) {
                 return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
                     error: ResponseMessage.DATABASE_ERROR,
@@ -337,7 +337,7 @@ exports.getAll = async function (req, res, next) {
             });
 
             // Calc uf global grade
-            Object.keys(grades).forEach(function (key) {
+            Object.keys(grades).forEach(function(key) {
                 calcGrade += ((grades[key].percentage / 100) * grades[key].grade);
             });
 
@@ -346,7 +346,7 @@ exports.getAll = async function (req, res, next) {
             m.globalModuleGrade += parseFloat(uf.globalUfGrade);
 
             // Calc Truancies
-            uf.truancies.forEach(function (trn) {
+            uf.truancies.forEach(function(trn){
                 calcTruancy += trn.hours;
             });
 

@@ -16,6 +16,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - mongodb:/data/db/
+      - ../data/db:/data/db
+      - ../data/configdb:/data/configdb
 volumes:
   mongodb:

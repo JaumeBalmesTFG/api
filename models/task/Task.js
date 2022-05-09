@@ -10,6 +10,11 @@ const taskSchema = new Schema({
         required: true
     },
 
+    moduleId: {
+        type: Schema.Types.ObjectId,
+        required: true
+    },
+
     ufId: {
         type: Schema.Types.ObjectId,
         required: true
