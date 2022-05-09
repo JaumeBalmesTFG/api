@@ -35,32 +35,6 @@ let moduleSchema = Joi.object({
         })
 });
 
-let moduleArchivedSchema = Joi.object({
-    archived: Joi.boolean()
-        .required()
-        .messages({
-            "string.base": `"Archived" should be a type of '#boolean'`,
-            "string.empty": `"Archived" cannot be an empty field`,
-            "string.min": `"Archived" should have a minimum length of {#limit}`,
-            "string.max": `"Archived" should have a maximum length of {#limit}`,
-            "any.required": `"Archived" is a required field`
-        })
-});
-
-exports.validateModuleArchivedSchema = async function (req, res, next) {
-    await moduleArchivedSchema.validateAsync(req.body)
-        .then(function () { return next(); })
-        .catch(function (err) {
-            return res.status(HttpStatusCode.NOT_ACCEPTABLE).send({
-                error: err.details[0].message,
-                message: HttpStatusMessage.NOT_ACCEPTABLE,
-                path: req.path,
-                method: req.method,
-                body: req.body
-            });
-        });
-}
-
 exports.validateModuleSchema = async function (req, res, next) {
     await moduleSchema.validateAsync(req.body)
         .then(function () { return next(); })
