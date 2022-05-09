@@ -16,7 +16,6 @@ const userLoginSchema = Joi.object({
 
     // Min 6 chars, lowercase, uppercase, numbers is required, special chars are optional
     password: Joi.string()
-        .pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*?]{6,30}$/)
         .required()
         .messages({
             "string.base": `"Password" should be a type of 'text'`,
