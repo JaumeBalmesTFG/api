@@ -244,7 +244,7 @@ exports.archive = async function (req, res, next) {
         });
     }
 
-    match.archived = !req.body.archived;
+    match.archived = !match.archived;
 
     match.save(function(err, doc){
         if (err) {
