@@ -130,7 +130,9 @@ exports.get = async function (req, res) {
 
                 backgroundColor: module.color,
                 textColor: '#FFFFFF',
-                date: task.dueDate
+                borderColor: module.color,
+                date: task.dueDate,
+                allDay: true,
             }
 
             calendarData.push(data);
@@ -157,6 +159,8 @@ exports.get = async function (req, res) {
 
                 backgroundColor: module.color,
                 textColor: '#FFFFFF',
+                borderColor: module.color,
+                allDay: true,
                 date: truancy.date,
                 hours: truancy.hours
             }
