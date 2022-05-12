@@ -49,11 +49,7 @@ let taskSchema = Joi.object({
             "any.required": `"Name" is a required field`
         }),
 
-    description: Joi.string()
-        .messages({
-            "string.base": `"Description" should be a type of 'text'`,
-            "string.min": `"Description" should have a minimum length of {#limit}`
-        }),
+    description: Joi.string().allow(null, ''),
 
     grade: Joi.number()
         .messages({
