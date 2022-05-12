@@ -79,6 +79,7 @@ exports.update = async function (req, res, next) {
             ufId: body.ufId,
             name: body.name,
             grade: body.grade,
+            done: body.done,
             description: body.description,
             dueDate: body.dueDate
         }, { new: true },
