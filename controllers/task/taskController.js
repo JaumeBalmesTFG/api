@@ -77,6 +77,7 @@ exports.update = async function (req, res, next) {
         {
             moduleId: body.moduleId,
             ufId: body.ufId,
+            ruleId: body.ruleId,
             name: body.name,
             grade: body.grade,
             done: body.done,
