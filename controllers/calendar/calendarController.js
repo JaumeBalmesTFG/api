@@ -110,7 +110,6 @@ exports.get = async function (req, res) {
         }
 
     });
-
     if (allTasks.length > 0) {
 
         for (let i = 0; i < allTasks.length; i++) {

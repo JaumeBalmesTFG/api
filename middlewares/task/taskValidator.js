@@ -50,21 +50,22 @@ let taskSchema = Joi.object({
         }),
 
     description: Joi.string()
-        .pattern(/^[A-z0-9\s]+$/)
-        .min(1)
-        .required()
         .messages({
             "string.base": `"Description" should be a type of 'text'`,
             "string.empty": `"Description" cannot be an empty field`,
-            "string.min": `"Description" should have a minimum length of {#limit}`,
-            "any.required": `"Description" is a required field`
+            "string.min": `"Description" should have a minimum length of {#limit}`
         }),
 
     grade: Joi.number()
         .messages({
             "string.base": `"grade" should be a type of 'number'`,
             "string.empty": `"grade" cannot be an empty field`,
-            "any.required": `"grade" is a required field`
+        }),
+
+    done: Joi.boolean()
+        .messages({
+            "string.base": `"done" should be a type of 'boolean'`,
+            "string.empty": `"done" cannot be an empty field`,
         }),
 
     dueDate: Joi.date()
