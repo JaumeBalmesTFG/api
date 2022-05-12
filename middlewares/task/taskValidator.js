@@ -52,7 +52,6 @@ let taskSchema = Joi.object({
     description: Joi.string()
         .messages({
             "string.base": `"Description" should be a type of 'text'`,
-            "string.empty": `"Description" cannot be an empty field`,
             "string.min": `"Description" should have a minimum length of {#limit}`
         }),
 
