@@ -73,7 +73,7 @@ exports.update = async function (req, res, next) {
 
     const body = req.body;
 
-    Task.findOneAndUpdate({ _id: req.params.task_id, authorId: res.locals.authUserId, ufId: req.body.ufId },
+    Task.findOneAndUpdate({ _id: req.params.task_id, authorId: res.locals.authUserId },
         {
             moduleId: body.moduleId,
             ufId: body.ufId,
