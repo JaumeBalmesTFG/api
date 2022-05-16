@@ -127,7 +127,8 @@ exports.loginController = async function (req, res) {
             return res.status(HttpStatusCode.ACCEPTED).send({
                 message: ResponseMessage.LOGIN_SUCCESSFUL,
                 body: {
-                    token: user.token
+                    token: user.token,
+                    body: user
                 }
             });
         }
