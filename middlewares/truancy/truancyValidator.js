@@ -39,8 +39,7 @@ let truancySchema = Joi.object({
             "date.required": `"Date" is a required field`
         }),
 
-    reason: Joi.string()
-        .messages({}),
+    reason: Joi.string().allow(null, ''),
 
     hours: Joi.number()
         .required()

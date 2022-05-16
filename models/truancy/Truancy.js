@@ -26,8 +26,7 @@ const moduleSchema = new Schema({
     },
 
     reason: {
-        type: String,
-        required: true,
+        type: String
     },
 
     hours: {
