@@ -47,7 +47,14 @@ const taskSchema = new Schema({
     done: {
         type: Boolean,
         default: false
+    },
+
+    archived: {
+        type: Boolean,
+        default: false,
+        required: true
     }
+
 }, { timestamps: true });
 
 module.exports = mongoose.model("Task", taskSchema);

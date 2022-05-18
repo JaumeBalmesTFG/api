@@ -3,6 +3,7 @@ const Module = require('../../models/module/Module');
 const Uf = require('../../models/uf/Uf');
 
 const Task = require('../../models/task/Task');
+const Truancy = require('../../models/truancy/Truancy');
 const Rule = require('../../models/rule/Rule');
 
 // Status Messages
@@ -17,7 +18,6 @@ const {
     checkPathObjectId
 } = require('../../services/checker');
 
-const Truancy = require('../../models/truancy/Truancy');
 const {uf} = require("../../test/requests/hooks");
 
 // Create Module
@@ -256,7 +256,7 @@ exports.archive = async function (req, res, next) {
             });
         }
 
-        Uf.updateMany({ moduleId: match._id }, {archived: req.body.archived}, function(err, doc){
+        Uf.updateMany({ moduleId: match._id }, { archived: match.archived }, function(err, doc){
             if (err) {
                 return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
                     error: ResponseMessage.DATABASE_ERROR,
@@ -266,6 +266,30 @@ exports.archive = async function (req, res, next) {
                 });
             }
         });
+
+        Task.updateMany({ moduleId: match._id }, { archived: match.archived }, function (err, doc) {
+            if (err) {
+                return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
+                    error: ResponseMessage.DATABASE_ERROR,
+                    path: req.originalUrl,
+                    method: req.method,
+                    body: req.body
+                });
+            }
+        });
+
+        Truancy.updateMany({ moduleId: match._id }, { archived: match.archived }, function (err, doc) {
+            if (err) {
+                return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
+                    error: ResponseMessage.DATABASE_ERROR,
+                    path: req.originalUrl,
+                    method: req.method,
+                    body: req.body
+                });
+            }
+        });
+
+
 
         return res.status(HttpStatusCode.OK).send({
             path: req.originalUrl,

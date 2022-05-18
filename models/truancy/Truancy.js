@@ -34,6 +34,13 @@ const moduleSchema = new Schema({
         default: false,
         required: true
     },
+
+    archived: {
+        type: Boolean,
+        default: false,
+        required: true
+    }
+
 }, { timestamps: true });
 
 // Exports
