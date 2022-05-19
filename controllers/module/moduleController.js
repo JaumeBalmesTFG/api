@@ -388,6 +388,8 @@ exports.getAll = async function (req, res, next) {
                     grade += arr.grades[i];
                 }
 
+                if(arr.grades.length === 0){ return; }
+
                 calcGrade += ((grade / arr.grades.length) / 100) * arr.percentage;
             });
 
@@ -412,6 +414,12 @@ exports.getAll = async function (req, res, next) {
 
             return uf.globalUfGrade;
         });
+
+        if(m.ufs.length === 0){
+            m.globalModuleGrade = "0.00";
+        } else {
+            m.globalModuleGrade = m.globalModuleGrade / m.ufs.length;
+        }
     });
 
     return res.send(modules);
