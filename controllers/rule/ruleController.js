@@ -1,5 +1,6 @@
 // Rule Model
 const Rule = require('../../models/rule/Rule');
+const Task = require('../../models/task/Task');
 
 // Status Messages
 const {
@@ -92,6 +93,46 @@ exports.getAll = async function (req, res, next) {
             path: req.originalUrl,
             method: req.method,
             body: doc,
+        });
+    });
+}
+
+// Get All Rules From Uf
+exports.isTasksInThisRule = async function (req, res, next) {
+
+    if(!checkPathObjectId(req.params.rule_id)){
+        return res.status(HttpStatusCode.BAD_REQUEST).send({
+            message: HttpStatusMessage.BAD_REQUEST,
+            path: req.originalUrl,
+            method: req.method,
+            body: req.body
+        });
+    }
+
+    Task.find({ ruleId: req.params.rule_id }, function (err, doc) {
+        if (err) {
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
+                message: ResponseMessage.DATABASE_ERROR,
+                path: req.originalUrl,
+                method: req.method,
+                body: doc,
+            });
+        }
+
+        if(doc.length > 0){
+            return res.status(HttpStatusCode.OK).send({
+                message: HttpStatusMessage.OK,
+                path: req.originalUrl,
+                method: req.method,
+                body: true,
+            });
+        }
+
+        return res.status(HttpStatusCode.OK).send({
+            message: HttpStatusMessage.OK,
+            path: req.originalUrl,
+            method: req.method,
+            body: false,
         });
     });
 }

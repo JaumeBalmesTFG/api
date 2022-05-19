@@ -7,7 +7,8 @@ const {
     create,
     update,
     get,
-    getAll
+    getAll,
+    isTasksInThisRule
 } = require('../../controllers/rule/ruleController');
 
 // Middlewares
@@ -21,8 +22,10 @@ router.use(isAuthenticated);
  * CRUD
  */
 router.post("/create", validateRuleSchema, create);
+router.get("/task/:rule_id", isTasksInThisRule);
 router.put("/:rule_id/edit", validateRuleSchema, update);
 router.get("/:rule_id", get);
 router.delete("/:rule_id/delete", remove);
 router.get('/uf/:uf_id', getAll);
+
 module.exports = router;
