@@ -18,7 +18,7 @@ const {
     checkPathObjectId
 } = require('../../services/checker');
 
-const {uf} = require("../../test/requests/hooks");
+const { uf } = require("../../test/requests/hooks");
 
 // Create Module
 exports.create = async function (req, res, next) {
@@ -103,13 +103,13 @@ exports.getAllUfsFromModules = async function (req, res, next) {
         return Module.find({ authorId: res.locals.authUserId, archived: false }).lean();
     }
 
-    async function getUfs(module){
+    async function getUfs(module) {
         return Uf.find({ moduleId: module._id, archived: false }).lean();
     }
 
-    await getModules().then( function (foundModules) {
+    await getModules().then(function (foundModules) {
         modules = foundModules;
-    }).catch(function(err){
+    }).catch(function (err) {
         if (err) {
             return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
                 message: ResponseMessage.DATABASE_ERROR,
@@ -122,7 +122,7 @@ exports.getAllUfsFromModules = async function (req, res, next) {
 
     if (modules.length > 0) {
         for (let i = 0; i < modules.length; i++) {
-            await getUfs(modules[i]).then( function (ufs) {
+            await getUfs(modules[i]).then(function (ufs) {
                 modules[i]['ufs'] = ufs;
             }).catch(function (err) {
                 if (err) {
@@ -232,7 +232,7 @@ exports.archive = async function (req, res, next) {
         });
     }
 
-    const match = await Module.findOne({  _id: req.params.module_id, authorId: res.locals.authUserId });
+    const match = await Module.findOne({ _id: req.params.module_id, authorId: res.locals.authUserId });
 
 
     if (!match) {
@@ -246,7 +246,7 @@ exports.archive = async function (req, res, next) {
 
     match.archived = !match.archived;
 
-    match.save(function(err, doc){
+    match.save(function (err, doc) {
         if (err) {
             return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
                 error: ResponseMessage.DATABASE_ERROR,
@@ -256,7 +256,7 @@ exports.archive = async function (req, res, next) {
             });
         }
 
-        Uf.updateMany({ moduleId: match._id }, { archived: match.archived }, function(err, doc){
+        Uf.updateMany({ moduleId: match._id }, { archived: match.archived }, function (err, doc) {
             if (err) {
                 return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
                     error: ResponseMessage.DATABASE_ERROR,
@@ -302,8 +302,8 @@ exports.archive = async function (req, res, next) {
 exports.getUfsFromModule = function (req, res, next) {
     const moduleId = req.params.module_id;
 
-    Uf.find({ moduleId: moduleId }, function(err, doc){
-        if(err){
+    Uf.find({ moduleId: moduleId }, function (err, doc) {
+        if (err) {
             return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
                 error: ResponseMessage.DATABASE_ERROR,
                 path: req.originalUrl,
@@ -312,12 +312,12 @@ exports.getUfsFromModule = function (req, res, next) {
             });
         }
 
-        if(!doc){
+        if (!doc) {
             return res.status(HttpStatusCode.NOT_FOUND).send({
                 path: req.originalUrl,
                 method: req.method,
                 body: req.body
-            }); 
+            });
         }
 
         return res.status(HttpStatusCode.OK).send({
@@ -341,7 +341,7 @@ exports.getAll = async function (req, res, next) {
 
             uf.truancies = await Truancy.find({ ufId: uf._id, authorId: res.locals.authUserId }, { hours: 1 });
 
-            uf.tasks = await Task.find({ ufId: uf._id, authorId: res.locals.authUserId }, { ruleId: 1, grade: 1, name: 1 }).lean();
+            uf.tasks = await Task.find({ ufId: uf._id, authorId: res.locals.authUserId }, { ruleId: 1, done: 1, grade: 1, name: 1 }).lean();
 
             var rulePromises = uf.tasks.map(async function (task, i) {
                 task.rule = await Rule.findById(task.ruleId, { percentage: 1, title: 1 }).lean();
@@ -371,24 +371,42 @@ exports.getAll = async function (req, res, next) {
             var calcTruancy = 0;
 
             uf.tasks.forEach(function (task) {
-                grades[task.rule.title] = { percentage: task.rule.percentage, grade: 0 };
+                grades[task.rule.title] = { percentage: task.rule.percentage, grades: [] };
             });
 
             uf.tasks.forEach(function (task) {
-                grades[task.rule.title].grade += parseFloat(task.grade);
+                if (!task.grade || !task.done) { return; }
+                grades[task.rule.title].grades.push(parseFloat(task.grade));
             });
 
-            // Calc uf global grade
-            Object.keys(grades).forEach(function(key) {
-                calcGrade += ((grades[key].percentage / 100) * grades[key].grade);
+            Object.keys(grades).forEach(function (key) {
+
+                let arr = grades[key];
+                var grade = 0;
+
+                for (let i = 0; i < arr.grades.length; i++) {
+                    grade += arr.grades[i];
+                }
+
+                if(arr.grades.length === 0){ return; }
+
+                calcGrade += ((grade / arr.grades.length) / 100) * arr.percentage;
             });
 
-            uf.globalUfGrade = calcGrade.toFixed(2);
+            if (isNaN(calcGrade) || uf.tasks.length === 0) {
+                uf.globalUfGrade = "0.00";
+
+            } else if ((parseInt(calcGrade) - calcGrade).toFixed(1) == 0) {
+                uf.globalUfGrade = parseInt(calcGrade);
+
+            } else {
+                uf.globalUfGrade = calcGrade.toFixed(2);
+            }
 
             m.globalModuleGrade += parseFloat(uf.globalUfGrade);
 
             // Calc Truancies
-            uf.truancies.forEach(function(trn){
+            uf.truancies.forEach(function (trn) {
                 calcTruancy += trn.hours;
             });
 
@@ -397,8 +415,11 @@ exports.getAll = async function (req, res, next) {
             return uf.globalUfGrade;
         });
 
-        m.globalModuleGrade = m.globalModuleGrade / m.ufs.length;
-
+        if(m.ufs.length === 0){
+            m.globalModuleGrade = "0.00";
+        } else {
+            m.globalModuleGrade = m.globalModuleGrade / m.ufs.length;
+        }
     });
 
     return res.send(modules);
