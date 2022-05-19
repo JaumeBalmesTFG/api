@@ -1,4 +1,3 @@
-
 // Task Model
 const Uf = require('../../models/uf/Uf');
 const Task = require('../../models/task/Task');
