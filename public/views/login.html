@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>K-lendar Tests</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css">
     <style>
         body {
             background: #667db6;
@@ -17,46 +18,72 @@
 
         }
 
-        #form{
+        #form-container {
+            text-align: center;
+        }
+
+        #spinner {
+            display: none;
+            text-align: center;
+            margin: auto;
+        }
+
+        #form {
             font-family: Arial, Helvetica, sans-serif;
             display: flex;
             align-items: center;
-            margin: 15% auto;
+            margin: 250px auto;
             padding: 15px;
-            width: 300px;
-            height: 180px;
+            width: 320px;
+            height: 200px;
             background-color: white;
             border-radius: 10px;
-            flex-direction: column;
+            vertical-align: middle;
+            align-items: center;
         }
 
-        input{
+        input {
             width: 80% !important;
             box-sizing: content-box;
             padding: 5px;
         }
-
     </style>
 </head>
+
 <body>
     <div id="form">
-        <h3>Login Tests</h3>
-        <input type="text" placeholder="username" id="username">
-        <input type="password" placeholder="password" id="password">
-        <br>
-        <input type="button" value="send" id="button">
+        <div id="form-container">
+            <h3>Login Tests</h3>
+            <input type="text" placeholder="username" id="username">
+            <input type="password" placeholder="password" id="password">
+            <br>
+            <input type="button" value="send" id="button">
+        </div>
+        <div id="spinner">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div id="message">Loading...</div>
+        </div>
     </div>
     <script>
+
         let user = document.getElementById('username');
         let pass = document.getElementById('password');
-        let btn  = document.getElementById('button');
+        let btn = document.getElementById('button');
+        let formContainer = document.getElementById('form-container');
+        let spinner = document.getElementById('spinner');
 
-        btn.onclick = function(){
+        btn.onclick = function () {
 
             let data = {
                 username: user.value,
                 password: pass.value
             };
+
+
+            formContainer.style.display = "none";
+            spinner.style.display = "block";
 
             fetch('/test/login', {
                 method: 'post',
@@ -65,21 +92,26 @@
                 },
                 body: JSON.stringify(data)
             })
-            .then(async function(response){
+                .then(async function (response) {
 
-                if(response.status !== 200){
-                    alert("Invalid Login");
-                    return;
-                }
+                    if (response.status !== 200) {
+                        alert("Invalid Login");
+                        formContainer.style.display = "block";
+                        spinner.style.display = "none";
+                        return;
+                    }
 
-                var data = await response.json();
-                
-                if(data.token){
-                    location.href = `/test/${data.token}`;
-                }
-            })
-            .catch(err => {console.log("error");})
+                    var data = await response.json();
+
+                    if (data.token) {
+                        location.replace(`/test/${data.token}`);
+                    }
+                })
+                .catch(err => {
+                    console.log("error");
+                })
         };
     </script>
 </body>
+
 </html>

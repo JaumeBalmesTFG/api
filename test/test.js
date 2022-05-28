@@ -3,7 +3,7 @@ const { URI_TEST } = require('../config/config.js');
 
 describe('API', async () => {
     before(function (done) {
-        mongoose.connect(URI_TEST, done)
+        mongoose.connect(URI_TEST, done);
     });
 
     require('./register.test.js');

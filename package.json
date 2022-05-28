@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon server --ignore public/mocha/",
     "start": "node server",
-    "test": "mocha ./test/test.js",
+    "test": "mocha ./test/test.js --timeout 3000",
     "dev:awesome": "npm run test:awesome && nodemon server --ignore 'mochawesome-report/*'",
     "test:awesome": "mocha --exit ./test/test.js --reporter mochawesome --reporter-options reportDir=public/mocha",
     "open:report": "open mochawesome-report/mochawesome.html",

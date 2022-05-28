@@ -25,7 +25,7 @@ describe('/Task', function () {
     let token;
     let taskId;
     let uf = { moduleId: null, ...hooks.uf };
-    let task = { ufId: null, ruleId: null,  ...hooks.task };
+    let task = { ufId: null, ruleId: null,  ...hooks.task, moduleId: null };
     let rule = {
         ufId: null,
         ...hooks.rule
@@ -38,6 +38,7 @@ describe('/Task', function () {
 
         await request.post('/module', token, hooks.module).then(function (res) {
             uf.moduleId = res.body.body._id;
+            task.moduleId = res.body.body._id;
         });
 
         await request.post('/uf/create', token, uf).then(function(res){
@@ -56,7 +57,9 @@ describe('/Task', function () {
             expect(res.status).to.equal(201);
             taskId = res.body.body._id;
             done();
-        }).catch(function (err) { done(err);  });
+        }).catch(function (err) { 
+            done(err);  
+        });
     });
 
     it('[2]- Edit Task', function (done) {
