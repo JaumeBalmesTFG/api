@@ -26,6 +26,7 @@ describe('/Truancy', function () {
     let moduleId;
     let truancyId;
     let truancy = {
+        moduleId: null,
         ufId: null,
         ...hooks.truancy
     }
@@ -37,6 +38,7 @@ describe('/Truancy', function () {
 
         await request.post('/module', token, hooks.module).then(function (res) {
             moduleId = res.body.body._id;
+            truancy.moduleId = res.body.body._id;
         });
 
         await request.post('/uf/create', token, {

@@ -28,7 +28,7 @@ router.post("/login", async function (req, res, next) {
         return res.sendStatus(401);
     }
 
-    const token = await jwt.sign({ user: 'admin' }, secret, { expiresIn: '2h' });
+    const token = await jwt.sign({ user: 'admin' }, secret, { expiresIn: '7d' });
 
     return res.send({
         token: token
@@ -51,17 +51,11 @@ router.get("/:token", async function (req, res, next) {
     }
 
 
-    if(!execTests()){
+    if (!execTests()) {
         return res.send('error on tests');
     };
 
-    return res.sendFile("mochawesome.html", {root: 'public/mocha'});
-
-
-
-
+    return res.sendFile("mochawesome.html", { root: 'public/mocha' });
 });
-
-
 
 module.exports = router;    
